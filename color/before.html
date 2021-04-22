@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>before</title>
+	<style>
+		p {
+			margin:0;
+			padding: 10px;
+			width: 700px;
+			line-height: 30px;
+			background-color: #eee;
+			color: #122;
+		}
+		span {
+			padding: 0 2px;
+			position: relative;
+		}
+		span:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: #000;
+			transition: all 0.8s;
+		}
+		span:hover:before {
+			opacity: 0;
+		}
+	</style>
+</head>
+<body>
+	<p>隐私是每个人的基本权利，同时也是 Apple 的一项核心价值观。你的设备在生活的方方面面都发挥着重要作用。其中的<span>哪些东西</span>可以分享，以及与谁分享，都应该由你来决定。我们设计 Apple 产品的理念就是保护你的隐私，并让你全权管控自己的<span>信息</span>。这并非易事，但我们坚信这才是真正的创新。</p>
+</body>
+</html>

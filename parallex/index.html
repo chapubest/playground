@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习parallax.js</title>
+    <script src="./parallax.js"></script>
+    <script src="../_common/jquery-3.5.1.js"></script>
+    <style>
+        body {
+            background: #D9E5D6;
+        }
+        #container,
+        .head,
+        .eye,
+        .mouth,
+        .hair,
+        .fringe,
+        .ear,
+        .nose {
+            position: absolute;
+        }
+        #container {
+            margin: auto;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 115px;
+            height: 120px;
+            transform-origin: bottom;
+        }
+        .hair {
+            z-index: 5;
+            top: -20px !important;
+            left: -15px !important;
+            width: 115px;
+            height: 120px;
+            background: #404E4D;
+            border-radius: 100px 100px 10px 10px;
+        }
+        .fringe {
+            z-index: 99;
+            top: -2px !important;
+            left: 25px !important;
+            width: 60px;
+            height: 40px;
+            background: #404E4D;
+            border-radius: 0 100px 100% 250px;
+            transform: rotate(30deg);
+        }
+        .fringe:before {
+            position: absolute;
+            content: '';
+            top: -3px;
+            left: -34px;
+            width: 57px;
+            height: 30px;
+            background: #424B54;
+            border-radius: 100%;
+            transform: rotate(-50deg);
+        }
+        .head {
+            left: 10px;
+            z-index: 9;
+            width: 85px;
+            height: 108px;
+            background: #E8C2B7;
+            border-radius: 100px;
+        }
+        .eye {
+            z-index: 20;
+            top: 45px !important;
+            left: 12px !important;
+            width: 12px;
+            height: 12px;
+            background: #404E4D;
+            border-radius: 100%;
+        }
+        .eye:before {
+            position: absolute;
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: #404E4D;
+            border-radius: 100%;
+            left: 53px;
+        }
+        .mouth {
+            top: 75px;
+            left: 30px;
+            width: 30px;
+            height: 15px;
+            border-radius: 0 0 100px 100px;
+            background: #404E4D;
+            overflow: hidden;
+        }
+        .tongue {
+            position: absolute;
+            top: 7px;
+            left: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 100%;
+            background: #F6828C;
+        }
+        .ear {
+            z-index: 8;
+            width: 30px;
+            height: 30px;
+            background: #E8C2B7;
+            top: 39px !important;
+            left: -5px !important;
+            border-radius: 100%;
+            visibility: hidden;
+        }
+        .ear.right {
+            left: 60px !important;
+        }
+        .nose {
+            z-index: 20;
+            top: 54px;
+            left: 40px;
+            width: 8px;
+            height: 14px;
+            background: #DB9B99;
+            border-radius: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div class="hair"></div>
+        <div class="ear" data-depth="0.3"></div>
+        <div class="ear right" data-depth="0.3"></div>
+        <!-- 边缘 -->
+        <div class="layer fringe" data-depth="0.2"></div>
+        <div class="layer eye" data-depth="0.6"></div>
+        <div class="layer head" data-depth="0.2">
+            <div class="nose"></div>
+            <div class="mouth">
+                <div class="tongue"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const parent = $('#container').get(0);
+        const parallax = new Parallax(parent, {
+            invertX: false,
+            invertY: false,
+            limitX: 26,
+            limitY: 26,
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>color</title>
+</head>
+<style>
+	html, body {
+		height: 100%
+	}
+	body {
+		transition: all 2s;
+		background-color: #000000;
+	}
+	.c1 {
+		color: #000;
+	}
+	.c2 {
+		color: #fff;
+	}
+</style>
+<body>
+	<script>
+		window.onload = function() {
+			var str = '#000'
+			var timer = setInterval(function() {
+				var nm = parseInt(str.replace('#', '0x'))
+				nm += 2
+				str = '000' + nm.toString(16)
+				str = '#' + str.substr(-3)
+				document.body.style.backgroundColor = str
+				document.title = str
+			}, 100)
+			
+		}
+	</script>
+</body>
+</html>

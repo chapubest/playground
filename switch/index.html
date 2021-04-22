@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chrome 浏览器 switch 实现</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+        my-switch {
+            margin: 20px auto;
+        }
+        /* 自定义标签未被注册 */
+        my-switch:not(:defined) {
+            display: none;
+        }
+    </style>
+    <script>
+        
+        class MySwitch extends HTMLElement {
+            static get TAG_NAME() {
+                return "my-switch";
+            }
+            constructor() {
+                super();
+                const shadowRoot = this.attachShadow({ mode: "open" });
+                // 创建
+                var bar = document.createElement("span");
+                bar.setAttribute("class", "bar");
+                var knob = document.createElement("span");
+                knob.setAttribute("class", "knob");
+                var knobRipple = document.createElement("div");
+                knobRipple.setAttribute("class", "knob-ripple");
+                var ripple = document.createElement("div");
+                ripple.setAttribute("class", "ripple");
+
+                var style = document.createElement("style");
+                style.textContent = `:host {
+                    position: relative;
+                    width: 34px;
+                    min-width: 34px;
+                    cursor: pointer;
+                    display: block;
+                    outline: none;
+                }
+                :host([checked]) .bar {
+                    background-color: rgb(26, 115, 232);
+                    opacity: .5;
+                }
+                .bar {
+                    z-index: 0;
+                    position: absolute;
+                    left: 3px;
+                    top: 2px;
+                    height: 12px;
+                    width: 28px;
+                    border-radius: 8px;
+                    background-color: #bdc1c6;
+                    transition: background-color linear 80ms;
+                }
+                :host([checked]) .knob {
+                    background-color: rgb(26, 115, 232);
+                    transform: translateX(18px);
+                }
+                .knob {
+                    z-index: 1;
+                    position: relative;
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    display: block;
+                    background-color: #fff;
+                    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 40%);
+                    transition: transform linear 80ms, background-color linear 80ms;
+                }
+                .knob-ripple {
+                    position: absolute;
+                    left: -12px;
+                    top: -12px;
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    pointer-events: none;
+                }
+                .ripple {
+                    width: 0;
+                    height: 0;
+                    border-radius: 50%;
+                    background-color: rgba(26, 115, 232, .2);
+                    transition: all linear 10s;
+                }
+                .ripple.hoad {
+                    width: 100%;
+                    height: 100%;
+                }`;
+                shadowRoot.appendChild(style);
+                shadowRoot.appendChild(bar);
+                shadowRoot.appendChild(knob);
+                knob.appendChild(knobRipple);
+
+                this.addEventListener("click", function(e) {
+                    knobRipple.appendChild(ripple);
+                    ripple.className += " hoad";
+                    // setTimeout(() => {
+                    //     knobRipple.removeChild(ripple);
+                    // }, 100);
+                    if (this.hasAttribute("checked")) {
+                        this.removeAttribute("checked")
+                    } else {
+                        this.setAttribute("checked","")
+                    }
+                })
+            }
+        }
+        /* 注册自定义标签 */
+        window.customElements.define(MySwitch.TAG_NAME, MySwitch);
+    </script>
+</head>
+<body>
+    <!-- 自定义标签名需含有 -  -->
+    <my-switch checked></my-switch>
+</body>
+</html>

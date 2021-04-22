@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>骨架屏</title>
+    <style>
+        :root {
+            --loading-grey: #ededed;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            /* 均匀排列 n+1个间隔 */
+            justify-content: space-evenly;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            background-color: #f6f6f6;
+        }
+        .card {
+            width: 320px;
+            overflow: hidden;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .12);
+            background-color: #fff;
+            
+        }
+        .img {
+            height: 200px;
+        }
+        .img > img {
+            display: block;
+            width: 100%;
+            height: inherit;
+            object-fit: cover;
+        }
+        .content {
+            padding: 2rem 1.8rem;
+        }
+        h4 {
+            margin: 0 0 1rem;
+            font-size: 1.5rem;
+            line-height: 1.5rem;
+        }
+        .desc {
+            font-size: 1rem;
+            line-height: 1.4rem;
+        }
+        .loading .img,
+        .loading h4,
+        .loading .desc {
+            background-color: var(--loading-grey);
+            background: linear-gradient(
+                100deg,
+                rgba(255,255,255, 0) 40%,
+                rgba(255,255,255, .5) 50%,
+                rgba(255,255,255, 0) 60%
+            ) var(--loading-grey);
+            background-size: 200% 100%;
+            background-position-x: 180%;
+            animation: 1s loading ease-in-out infinite;
+        }
+        .loading h4 {
+            min-height: 1.6rem;
+            border-radius: 4px;
+            animation-delay: .05s;
+        }
+        .loading .desc {
+            min-height: 4rem;
+            border-radius: 4px;
+            animation-delay: .06s;
+        }
+        @keyframes loading {
+            to {
+                background-position-x: -20%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="img">
+            <img src="./demo.png" alt="demo">
+        </div>
+        <div class="content">
+            <h4>骨架屏 Skeleton 效果</h4>
+            <div class="desc">一般来讲，我们都必须务必慎重的考虑考虑。 既然如此， 在这种困难的抉择下，本人思来想去，寝食难安。 郭沫若说过一句富有哲理的话，形成天才的决定因素应该是勤奋。这句话语虽然很短，但令我浮想联翩。 </div>
+        </div>
+    </div>
+    <div class="card loading">
+        <div class="img">
+        </div>
+        <div class="content">
+            <h4></h4>
+            <div class="desc"></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>巧用 transform-origin </title>
+    <style>
+        h2 {
+            color: teal;
+            position: relative;
+            display: inline-block;
+        }
+        h2:hover {
+            color: honeydew;
+        }
+        h2::after {
+            content: "";
+            z-index: -1;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: teal;
+            width: 100%;
+            height: 100%;
+            transform: scaleX(0);
+            transform-origin: right center;
+            will-change: transform;
+            transition: transform .3s;
+        }
+        h2:hover::after {
+            transform: scaleX(1);
+            transform-origin: left center;
+        }
+    </style>
+</head>
+<body>
+    <h2>bad apple</h2>
+</body>
+</html>

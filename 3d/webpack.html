@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>webpack图标</title>
+  <style>
+    body {
+      height: 100%;
+      background-color: #2b3a42;
+    }
+    .container {
+      position: absolute;
+      top: 180px;
+      left: 180px;
+      width: 180px;
+      height: 180px;
+      transform-style: preserve-3d;
+    }
+    .cube {
+      transform: rotateX(-33.5deg) rotateY(45deg);
+      transform-style: preserve-3d;
+      position: absolute;
+    }
+    .out-cube {
+      width: 120px;
+      height: 120px;
+      animation: rotate 4s infinite;
+    }
+    @keyframes rotate {
+      0%, 40% {
+        transform: rotateX(-33.5deg) rotateY(45deg);
+      }
+      90%, 100% {
+        transform: rotateX(-33.5deg) rotateY(135deg);
+      }
+    }
+    @keyframes frotate {
+      0%, 40% {
+        transform: rotateX(-33.5deg) rotateY(45deg);
+      }
+      90%, 100% {
+        transform: rotateX(-33.5deg) rotateY(-45deg);
+      }
+    }
+    .inner-cube {
+      width: 60px;
+      height: 60px;
+      top: 30px;
+      left: 30px;
+      transform: rotateX(-33.5deg) rotateY(45deg);
+      animation: frotate 4s infinite;
+    }
+    .cube div {
+      width: 100%;
+      height: 100%;
+      background-color: rgba(141, 214, 249, 0.5);
+      border: 1px solid #fff;
+      position: absolute;
+    }
+    .inner-cube div {
+      background-color: #1D78C1;
+    }
+    .out-cube .front {
+      transform: translateZ(60px);
+    }
+    .out-cube .back {
+      transform: translateZ(-60px);
+    }
+    .out-cube .left {
+      transform: rotateY(-90deg) translateZ(60px);
+    }
+    .out-cube .right {
+      transform: rotateY(-90deg) translateZ(-60px);
+    }
+    .out-cube .top {
+      transform: rotateX(90deg) translateZ(60px);
+    }
+    .out-cube .bottom {
+      transform: rotateX(90deg) translateZ(-60px);
+    }
+    .inner-cube .front {
+      transform: translateZ(30px);
+    }
+    .inner-cube .back {
+      transform: translateZ(-30px);
+    }
+    .inner-cube .left {
+      transform: rotateY(-90deg) translateZ(30px);
+    }
+    .inner-cube .right {
+      transform: rotateY(-90deg) translateZ(-30px);
+    }
+    .inner-cube .top {
+      transform: rotateX(90deg) translateZ(30px);
+    }
+    .inner-cube .bottom {
+      transform: rotateX(90deg) translateZ(-30px);
+    }
+  </style>
+</head>
+<body>
+	<div class="container">
+    <div class="cube out-cube">
+      <div class="front"></div>
+      <div class="back"></div>
+      <div class="left"></div>
+      <div class="right"></div>
+      <div class="top"></div>
+      <div class="bottom"></div>
+    </div>
+    <div class="cube inner-cube">
+      <div class="front"></div>
+      <div class="back"></div>
+      <div class="left"></div>
+      <div class="right"></div>
+      <div class="top"></div>
+      <div class="bottom"></div>
+    </div>
+  </div>
+</body>
+</html>

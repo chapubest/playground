@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../_common/jquery-3.5.1.js"></script>
+    <title>网页顶部加载进度条</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+        .progress {
+            height: 2px;
+            background-color: #b91f1f;
+            width: 0;
+        }
+        img {
+            width: 700px;
+            display: block;
+        }
+    </style>
+    <script>
+        $(function() {
+            console.log("90 is start");
+            $(".progress").animate({
+                width: "90%"
+            }, 3000, function() {
+                console.log("90 is over");
+            });
+            document.onreadystatechange = function() {
+                if (document.readyState == "complete") {
+                    console.log("100 is start");
+                    $(".progress").stop();
+                    $(".progress").animate({
+                        width: "100%"
+                    }, 600, function() {
+                        $(".progress").fadeOut();
+                        console.log("100 is over");
+                    });
+                }
+            }
+            console.log("next");
+        });
+        console.log("other");
+    </script>
+</head>
+<body>
+    <div class="progress"></div>
+    <div>
+        <img src="https://alifei02.cfp.cn/creative/vcg/veer/1600water/veer-134612471.jpg" alt="">
+    </div>
+</body>
+</html>

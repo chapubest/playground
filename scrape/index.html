@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>刮一刮测试</title>
+    <style>
+        body {
+            background-color: #efefef;
+        }
+
+        /* 领奖入口 */
+        .scrape-award {
+            position: relative;
+            height: 60px;
+            width: 200px;
+        }
+
+        .scrape-award .award {
+            /* visibility: hidden; */
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+        }
+
+        .scrape-award .coating {
+            z-index: 2;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 刮一刮 -->
+    <div class="scrape-award">
+        <div class="award">
+            <div class="code">aSBsb3ZlIHlvdQ==</div>
+        </div>
+        <canvas class="coating"></canvas>
+    </div>
+    <script>
+        /* 涂层 */
+        function Coating(el, width, height) {
+            this.canvas = document.querySelector(el);
+            this.ctx = this.canvas.getContext("2d");
+            this.height = height
+            this.width = width
+            this.offsetX = 0
+            this.offsetY = 0
+            this.init()
+        }
+        Coating.prototype = {
+            init: function () {
+                var rect = this.canvas.getBoundingClientRect();
+                this.offsetX = rect.x;
+                this.offsetY = rect.y;
+                this.canvas.width = this.width;
+                this.canvas.height = this.height;
+                this.ctx.fillStyle = "#d5d5d5";
+                this.ctx.fillRect(0, 0, this.width, this.height);
+                this.ctx.fillStyle = "#000";
+                this.ctx.font = "15px Arial";
+                var string = "刮开涂层";
+                this.splitStr(string).forEach(item => {
+                    this.ctx.fillText(item.text, item.x, item.y);
+                })
+                this.ctx.globalCompositeOperation = "destination-out";
+                let isPhone = ["android", "iphone", "symbianos", "windows phone", "ipad", "ipod"]
+                this.canvas.addEventListener("touchstart", this.touchDown.bind(this));
+                this.canvas.addEventListener("touchmove", this.touchMove.bind(this));
+                this.canvas.addEventListener("touchend", this.touchUp.bind(this));
+            },
+            /* 开始挂涂层 */
+            touchDown: function (e) {
+                e.preventDefault();
+            },
+            /* 开始挂涂层 */
+            touchMove: function (e) {
+                e.preventDefault();
+                if (e.changedTouches) {
+                    var rect = this.canvas.getBoundingClientRect();
+                    this.offsetX = rect.x;
+                    this.offsetY = rect.y;
+                    var pos = e.changedTouches[0];
+                    let x = pos.clientX - this.offsetX,
+                        y = pos.clientY - this.offsetY;
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, 20, 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
+                /* 设置阈值 去除全部涂层 */
+                this.handleFilledPercentage(this.getFilledPercentage());
+            },
+            /* 开始挂涂层 */
+            touchUp: function (e) {
+                e.preventDefault();
+            },
+            /* 去除全部涂层 */
+            handleFilledPercentage: function (percentage) {
+                percentage = percentage || 0;
+                if (parseInt(percentage) > 50) {
+                    this.ctx.clearRect(0, 0, this.width, this.height);
+                    this.canvas.remove();
+                }
+            },
+            /* 获取已刮得涂层百分比 */
+            getFilledPercentage: function () {
+                let imgData = this.ctx.getImageData(0, 0, this.width, this.height);
+                let pixels = imgData.data;
+                let transPixels = [];
+                for (let i = 3; i < pixels.length; i += 4) {
+                    if (pixels[i] < 128) {
+                        transPixels.push(pixels[i]);
+                    }
+                }
+                return transPixels.length / (pixels.length / 4) * 100;
+            },
+            /* 在 canvas 绘制文本，保证垂直水平居中 */
+            splitStr: function (string, lineHeight = 16, padding = 15) {
+                var results = [],
+                    len = 1;
+                var lineWidth = this.width - padding * 2;
+                while (len < string.length) {
+                    var str = string.substring(0, len);
+                    var str1 = string.substring(0, len + 1);
+                    if (this.ctx.measureText(str).width <= lineWidth &&
+                        this.ctx.measureText(str1).width > lineWidth) {
+                        results.push({
+                            text: str,
+                            x: padding
+                        });
+                        string = string.substring(len);
+                    } else {
+                        len += 1;
+                    }
+                }
+                if (string.length > 0) {
+                    results.push({
+                        text: string,
+                        x: (this.width - this.ctx.measureText(string).width) / 2
+                    });
+                }
+                var startY = (this.height - results.length * lineHeight) / 2;
+                results.forEach((itme, index) => {
+                    itme.y = startY + lineHeight * (index + 1);
+                })
+                return results;
+            }
+        }
+        var coating = null;
+        /* 页面加载完毕 */
+        window.onload = function () {
+            var fdom = document.querySelector(".scrape-award")
+            coating = new Coating(".coating", fdom.clientWidth, fdom.clientHeight)
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>折叠菜单</title>
+  <style>
+    * {
+      border: 0;
+      padding: 0;
+      margin: 0;
+    }
+    html,body {
+      height: 100%;
+      background-color: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .menu {
+      width: 600px;
+      height: 400px;
+      background-color: #ddd;
+      display: flex;
+    }
+    .item {
+      /*默认值为1，缩放*/
+      flex-shrink: 1;
+      /*默认为0 不放大*/
+      flex-grow: 1;
+      /*定义文字书写方式*/
+      /*垂直方向从左到右*/
+      line-height: 25px;
+      writing-mode: vertical-lr;
+      text-align: center;
+      box-sizing: border-box;
+      border: 1px solid #aaa;
+      transition: all 1s;
+    }
+    .item:hover {
+      flex-grow: 2;
+    }
+  </style>
+</head>
+<body>
+	<div class="menu">
+    <div class="item">选项壹</div>
+    <div class="item">选项贰</div>
+    <div class="item">选项叁</div>
+    <div class="item">选项肆</div>
+  </div>
+</body>
+</html>

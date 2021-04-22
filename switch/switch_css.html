@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="switch"></div>
+    <style>
+        .switch {
+            position: relative;
+            height: 16px;
+            width: 34px;
+            min-width: 34px;
+            cursor: pointer;
+            display: block;
+        }
+        .switch::before {
+            content: "";
+            z-index: 0;
+            position: absolute;
+            left: 3px;
+            top: 2px;
+            height: 12px;
+            width: 28px;
+            border-radius: 8px;
+            background-color: #bdc1c6;
+            transition: background-color linear 80ms;
+        }
+        .switch[checked]::before {
+            background-color: #1a73e8;
+            opacity: .5;
+        }
+        .switch::after {
+            content: "";
+            z-index: 1;
+            position: relative;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: block;
+            background-color: #fff;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 40%);
+            transition: transform linear 80ms, background-color linear 80ms, box-shadow linear 80ms;
+        }
+        .switch[actived]::after {
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 40%),
+            0 0 0 12px rgba(128, 134, 139, .2);
+        }
+        .switch[checked]::after {
+            background-color: #1a73e8;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 40%);
+            transform: translateX(18px);
+        }
+        .switch[checked][actived]::after {
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 40%),
+            0 0 0 12px rgba(26, 115, 232, .2);
+        }
+    </style>
+    <script>
+        var switchs = document.getElementsByClassName("switch");
+        for(var i = 0; i<switchs.length; i++) {
+            switchs[i].addEventListener("mousedown", function(e) {
+                this.setAttribute("actived","")
+            });
+            switchs[i].addEventListener("mouseup", function(e) {
+                this.removeAttribute("actived")
+            })
+            switchs[i].addEventListener("mouseleave", function(e) {
+                this.removeAttribute("actived")
+            })
+            switchs[i].addEventListener("click", function(e) {
+                if (this.hasAttribute("checked")) {
+                    this.removeAttribute("checked")
+                } else {
+                    this.setAttribute("checked","")
+                }
+            })
+        }
+    </script>
+</body>
+</html>

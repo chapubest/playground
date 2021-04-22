@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>游戏-扫雷</title>
+  <script src="../_common/jquery-3.5.1.js"></script>
+	<style>
+		* {
+      padding: 0;
+      margin: 0;
+    }
+    html,body {
+      height: 100%;
+      background-color: #494a5f;
+    }
+    .header {
+      width: 500px;
+      margin: 40px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .opt {
+      user-select: none;
+      padding: 0 8px;
+      line-height: 30px;
+      text-align: center;
+      background-color: #cccccc;
+      border-left: 2px solid #ececec;
+      border-top: 2px solid #ececec;
+      border-right: 2px solid #989898;
+      border-bottom: 2px solid #989898;
+    }
+    .flag {
+      margin-bottom: 5px;
+      min-width: 45px;
+    }
+    .level {
+      cursor: pointer;
+      position: relative;
+    }
+    .levelopt {
+      top: -2px;
+      left: 62px;
+      position: absolute;
+      width: 60px;
+      display: none;
+    }
+    .levelopt li {
+      list-style: none;
+      width: 100%;
+      text-align: center;
+      background-color: #cccccc;
+      border-left: 2px solid #ececec;
+      border-top: 2px solid #ececec;
+      border-right: 2px solid #989898;
+      border-bottom: 2px solid #989898;
+    }
+    .container {
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .model {
+      position: relative;
+    }
+    .panel {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      cursor: pointer;
+      text-align: center;
+      background-color: rgba(10, 0, 0, 0.6);
+      color: #ffffff;
+    }
+    .box {
+      cursor: pointer;
+      box-sizing: border-box;
+      width: 25px;
+      height: 25px;
+      border: 1px solid #808080;
+    }
+    .floor {
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      border-left: 2px solid #ececec;
+      border-top: 2px solid #ececec;
+      border-right: 2px solid #989898;
+      border-bottom: 2px solid #989898;
+      background-color: #c0c0c0;
+    }
+    .box:hover .floor {
+      border-left: 2px solid #ffffff;
+      border-top: 2px solid #ffffff;
+    }
+    .box:active .floor {
+      content: '';
+      border-left: 2px solid #989898;
+      border-top: 2px solid #989898;
+      border-right: none;
+      border-bottom: none;
+    }
+    .bflag {
+      line-height: 23px;
+      text-align: center;
+      font-size: 13px;
+    }
+    .back {
+      width: 100%;
+      height: 100%;
+      line-height: 23px;
+      text-align: center;
+      background-color: #c0c0c0;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .n1 {
+      color: #0000ff;
+    }
+    .n2 {
+      color: #008100;
+    }
+    .n3 {
+      color: red;
+    }
+    .bombmine {
+      background-color: red;
+    }
+	</style>
+  <script>
+    var game = {
+      time: 0,
+      level: 0,
+      flag: 0,
+      timer: null,
+      mines: [],
+      backs: [],
+    };
+    var emoji ={
+      face: ['\u{1F914}','\u{1F615}','\u{1F631}','\u{1F61C}'],
+      bomb: '\u{1F4A3}',
+      pick: '\u{26CF}',
+      flag: '\u{1F6A9}'
+    };
+    var set = [
+      {
+        level: 0,
+        levelstr: '初级',
+        row: 9, // 行
+        col: 9, // 列
+        mine: 10 // 地雷
+      },
+      {
+        level: 1,
+        levelstr: '中级',
+        row: 16,
+        col: 16,
+        mine: 40
+      },
+      {
+        level: 2,
+        levelstr: '高级',
+        row: 16,
+        col: 30,
+        mine: 99
+      }
+    ];
+    
+    // dom加载完毕
+    $(function(){
+      newgame(0);
+    });
+    function newgame(level) {
+      game.time = 0;
+      game.level = level;
+      game.flag = set[level].mine;
+      setgame();
+      startgame();
+    }
+    function startgame() {
+      $('.container').on('mousedown', function(){
+        $('.face').text(emoji.face[1]);
+        if (event.button == 0) {
+          $('.tag').text(emoji.pick);
+        }else if (event.button == 2) {
+          $('.tag').text(emoji.flag);
+        }
+      });
+      $('body').on('mouseup', function(){
+        $('.face').text(emoji.face[0]);
+        $('.tag').text(emoji.pick);
+      });
+      $('.box').on('click', leftclick);
+      $('.box').on('contextmenu', rightclick);
+      if(!game.timer) {
+        game.timer = setInterval(function(){
+          game.time += 1;
+          $('.time').text(gettimestr());
+        }, 1000);
+      }
+    }
+    // 结束游戏
+    function endgame() {
+      $('.container').off('mousedown');
+      $('body').off('mouseup');
+      $('.box').off('click');
+      $('.box').off('contextmenu');
+      if(game.timer) {
+        clearInterval(game.timer);
+        game.timer = null;
+      }
+      for (let minestr of game.mines) {
+        let mine = $('.'+minestr).children();
+        if(!mine.hasClass('bflag')){
+          mine.removeClass('floor');
+          mine.addClass('back mine');
+          mine.text(emoji.bomb);
+        }
+      }
+    }
+    function winordefeat(iswin) {
+      var panel = $('<div></div>');
+      var model = $('<div></div>');
+      panel.addClass('panel');
+      if(iswin){
+        panel.addClass('win');
+        panel.text('hhhhh'+emoji.face[3]+' 点击重玩');
+      }else {
+        panel.addClass('defeat');
+        panel.text('noooo'+emoji.face[2]+' 点击重玩');
+      }
+      let wd = $('.container').width()+'px';
+      let hd = $('.container').height()+'px';
+      panel.css({
+        width: wd,
+        height: hd,
+        lineHeight: hd
+      });
+      panel.on('click', function() {
+        newgame(game.level);
+      });
+      model.addClass('model')
+      model.append(panel);
+      $('.container').append(model);
+    }
+    function gettimestr() {
+      let hour,minute,second,timestr;
+      hour = Math.floor(game.time/3600);
+      minute = Math.floor((game.time - hour*3600)/60);
+      second = game.time - hour*3600 - minute*60;
+      if(hour === 0) {
+        timestr = ("00"+minute).substr(-2)+":"+("00"+second).substr(-2);
+      }else {
+        timestr = ("00"+hour).substr(-2)+":"+("00"+minute).substr(-2)+":"+("00"+second).substr(-2);
+      }
+      return timestr;
+    }
+    function setgame() {
+      var gset = set[game.level];
+      var header = $('.header');
+      header.find('.num').text(game.flag);
+      header.find('.tag').text(emoji.pick);
+      header.find('.level .text').text(set[game.level].levelstr);
+      header.find('.face').text(emoji.face[0]);
+      header.find('.time').text(gettimestr());
+      var container = $('.container');
+      var gw = gset.col*25+'px';
+      container.css({width:gw});
+      createmine();
+      buildback();
+    }
+    function buildback() {
+      var gset = set[game.level];
+      var backs = [];
+      for(let i = 0;i < gset.row; i++) {
+        backs[i] = [];
+        for(let j = 0;j < gset.col; j++) {
+          backs[i][j] = getneighbourmines(i,j);
+        }
+      }
+      game.backs = backs;
+    }
+    function getneighbourmines(i,j) {
+      let me = i+'_'+j;
+      if(game.mines.indexOf(me)!=-1) {
+        return -1;
+      }else {
+        let gset = set[game.level]
+        let count = 0;
+        let me_i = i;
+        let me_j = j;
+        i -= 1;
+        j -= 1;
+        for (let x=i;x<i+3;x++) {
+          for (let y=j;y<j+3;y++) {
+            if(x>=0&&x<gset.row&&y>=0&&y<gset.col) {
+              if(x==me_i&&y==me_j) {
+                continue;
+              }else {
+                let str = x+'_'+y;
+                if(game.mines.indexOf(str)!=-1) {
+                  count += 1;
+                }
+              }
+            }
+          }
+        }
+        return count;
+      }
+    }
+    function getneighbour(i,j) {
+      var gset = set[game.level]
+      var neighbour = [];
+      var me_i = i;
+      var me_j = j;
+      i -= 1;
+      j -= 1;
+      for (let x=i;x<i+3;x++) {
+        for (let y=j;y<j+3;y++) {
+          if(x>=0&&x<gset.row&&y>=0&&y<gset.col) {
+            if(x==me_i&&y==me_j) {
+              continue;
+            }else {
+              neighbour.push(x+"_"+y);
+            }
+          }
+        }
+      }
+      return neighbour;
+    }
+    function createmine() {
+      var gset = set[game.level];
+      var container = $('.container');
+      container.empty();
+      var list = [];
+      var mines = [];
+      for(let i = 0;i < gset.row; i++) {
+        for(let j = 0;j < gset.col; j++) {
+          let box = $('<div></div>');
+          let floor = $('<div></div>');
+          box.addClass('box');
+          box.addClass(i+'_'+j);
+          list.push(i+'_'+j);
+          box.append(floor)
+          floor.addClass('floor');
+          container.append(box);
+        }
+      }
+      for(let i=0;i<gset.mine;i++) {
+        let rand = Math.floor(Math.random()*list.length);
+        mines.push(list.splice(rand,1)[0]);
+      }
+      game.mines = mines;
+    }
+    // 左键点击事件
+    function leftclick() {
+      var str = $(this).attr('class').match(/\d+_\d+/);
+      var x_y = str[0].split('_');
+      var x = x_y[0];
+      var y = x_y[1];
+      let num = game.backs[x][y];
+      let child = $(this).children();
+      if(child.hasClass('bflag')) {
+        child.removeClass('bflag');
+        child.text("");
+        return;
+      }
+      if (num == 0) {
+        autopick(x, y);
+      }
+      if (num == -1) {
+        child.removeClass('floor');
+        child.addClass('back bombmine');
+        $('.face').text(emoji.face[2]);
+        endgame();
+        winordefeat(false);
+      }
+      if (num > 0) {
+        child.removeClass('floor');
+        child.addClass('back n'+num);
+        child.text(num);
+        $(this).off('click');
+        $(this).off('contextmenu');
+      }
+    }
+    function autopick(i,j) {
+      let center = $('.'+i+'_'+j).children();
+      center.removeClass('floor');
+      center.addClass('back n0');
+      center.parent().off('click');
+      center.parent().off('contextmenu');
+      let neighbourclass = getneighbour(i,j);
+      for (cstr of neighbourclass) {
+        let n = $('.'+cstr).children();
+        let x_y = cstr.split('_');
+        let x = x_y[0];
+        let y = x_y[1];
+        let num = game.backs[x][y];
+        if(n.hasClass('floor') && !n.hasClass('bflag')) {
+          if(num == 0) {
+            autopick(x, y);
+          }else {
+            n.removeClass('floor');
+            n.addClass('back n'+num);
+            n.text(num);
+            n.parent().off('click');
+            n.parent().off('contextmenu');
+          }
+        }
+      }
+    }
+    function rightclick() {
+      var str = $(this).attr('class').match(/\d+_\d+/);
+      var x_y = str[0].split('_');
+      var x = x_y[0];
+      var y = x_y[1];
+      let num = game.backs[x][y];
+      let child = $(this).children();
+      if(child.hasClass('bflag')) {
+        child.removeClass('bflag');
+        game.flag += 1;
+        child.text("");
+      }else {
+        child.addClass('bflag');
+        game.flag -= 1;
+        child.text(emoji.flag);
+      }
+      $('.num').text(game.flag);
+      if(game.flag == 0 && isgameover()) {
+        $('.face').text(emoji.face[3]);
+        endgame();
+        winordefeat(true);
+      }
+      return false;
+    }
+    function isgameover() {
+      let rightcount = 0;
+      let bflags = $('.bflag').parent();
+      for (let bflag of bflags) {
+        var str = $(bflag).attr('class').match(/\d+_\d+/);
+        if(game.mines.indexOf(str[0]) != -1) {
+          rightcount += 1;
+        }
+      }
+      return rightcount == game.mines.length;
+    }
+    function enterlevel() {
+      $('.levelopt').show('fast');
+    }
+    function leavelevel() {
+      $('.levelopt').hide('fast');
+    }
+  </script>
+</head>
+<body>
+  <div class="header">
+    <div class="left">
+      <div class="flag opt" title="剩余旗帜">
+        <span class="num"></span>
+        <span class="tag"></span>
+      </div>
+      <div class="level opt" title="选择难度" onmouseenter="enterlevel()" onmouseleave="leavelevel()">
+        <div class="text"></div>
+        <ul class="levelopt">
+          <li onclick="newgame(0)">简单</li>
+          <li onclick="newgame(1)">初级</li>
+          <li onclick="newgame(2)">高级</li>
+        </ul>
+      </div>
+    </div>
+    <div class="face opt"></div>
+    <div class="time opt" title="耗时">
+    </div>
+  </div>
+  <div class="container" draggable="false">
+  </div>
+</body>
+</html>

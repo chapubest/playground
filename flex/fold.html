@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>折叠效果</title>
+	<style>
+		.box{
+			width: 200px;
+			max-height: 600px;
+			display: flex;
+			flex-direction: column;
+			background-color: #ddd;
+		}
+		.item {
+			width: 100%;
+			overflow: hidden;
+			padding: 10px 0;
+		}
+		.a{
+			flex-shrink: 0;
+			background-color: red;
+		}
+		.b{
+			/*flex-shrink: 0;*/
+			height: 300px;
+			background-color: green;
+
+		}
+		.c{
+			height: 400px;
+			flex-shrink: 0;
+			background-color: blue;
+		}
+		.b:hover {
+			flex-shrink: 0;
+		}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<div class="item a">
+			<p>a1</p>
+			<p>a2</p>
+			<p>a3</p>
+		</div>
+		<div class="item b">
+			<p>b1</p>
+			<p>b2</p>
+			<p>b3</p>
+		</div>
+		<div class="item c">
+			<p>c1</p>
+			<p>c2</p>
+			<p>c3</p>
+		</div>
+	</div>
+</body>
+</html>

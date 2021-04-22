@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>索引栏</title>
+    <script src="../_common/jquery-3.5.1.js"></script>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+    <div class="head">head</div>
+    <!-- 索引栏 -->
+    <div class="index-bar">
+        <!-- 索引 -->
+        <div class="index-bar-sidebar">
+            <span class="index index-bar-index-active">热</span>
+            <span class="index">#</span>
+            <span class="index">a</span>
+            <span class="index">b</span>
+            <span class="index">c</span>
+            <span class="index">d</span>
+            <span class="index">e</span>
+            <span class="index">f</span>
+            <span class="index">g</span>
+            <span class="index">h</span>
+            <span class="index">i</span>
+            <span class="index">j</span>
+            <span class="index">k</span>
+            <span class="index">l</span>
+            <span class="index">m</span>
+            <span class="index">n</span>
+            <span class="index">o</span>
+            <span class="index">p</span>
+            <span class="index">q</span>
+            <span class="index">r</span>
+            <span class="index">s</span>
+            <span class="index">t</span>
+            <span class="index">u</span>
+            <span class="index">v</span>
+            <span class="index">w</span>
+            <span class="index">x</span>
+            <span class="index">y</span>
+            <span class="index">z</span>
+        </div>
+        <!-- 当前索引 -->
+        <div class="index-bar-current" style="display: none;"></div>
+        <!-- 内容 -->
+        <div class="index-bar-content">
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor" style="display: none;">热门</div>
+                </div>
+                <div style="height: 200px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">0-9</div>
+                </div>
+                <div style="height: 300px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">a</div>
+                </div>
+                <div style="height: 600px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">b</div>
+                </div>
+                <div style="height: 100px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">c</div>
+                </div>
+                <div style="height: 500px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">d</div>
+                </div>
+                <div style="height: 400px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">e</div>
+                </div>
+                <div style="height: 600px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">f</div>
+                </div>
+                <div style="height: 100px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">g</div>
+                </div>
+                <div style="height: 500px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">h</div>
+                </div>
+                <div style="height: 400px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">i</div>
+                </div>
+                <div style="height: 600px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">j</div>
+                </div>
+                <div style="height: 100px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">k</div>
+                </div>
+                <div style="height: 500px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">l</div>
+                </div>
+                <div style="height: 400px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">m</div>
+                </div>
+                <div style="height: 600px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">n</div>
+                </div>
+                <div style="height: 100px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">o</div>
+                </div>
+                <div style="height: 500px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">p</div>
+                </div>
+                <div style="height: 400px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">q</div>
+                </div>
+                <div style="height: 400px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">r</div>
+                </div>
+                <div style="height: 600px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">s</div>
+                </div>
+                <div style="height: 100px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">t</div>
+                </div>
+                <div style="height: 500px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">u</div>
+                </div>
+                <div style="height: 400px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">v</div>
+                </div>
+                <div style="height: 600px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">w</div>
+                </div>
+                <div style="height: 100px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">x</div>
+                </div>
+                <div style="height: 500px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">y</div>
+                </div>
+                <div style="height: 400px;background-color: #fff;"></div>
+            </div>
+            <div class="index-bar-group">
+                <div>
+                    <div class="index-anchor">z</div>
+                </div>
+                <div style="height: 600px;background-color: #fff;"></div>
+            </div>
+        </div>
+    </div>
+    <script src="./index.js"></script>
+</body>
+</html>

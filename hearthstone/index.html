@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hearthstone[demo]</title>
+    <script src="../_common/jquery-3.5.1.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            height: 100vh;
+            /* 自定义光标或默认 */
+            cursor: url(./img/hearthstone-cursor.png) 10 2, auto;
+            overflow: hidden;
+            background-color: #66677c;
+        }
+        body:active {
+            cursor: url(./img/hearthstone-click.png) 10 2, auto;
+        }
+        .card {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 200px;
+            /*3d元素和视图的距离*/
+	        perspective: 400px;
+	        transform-style: preserve-3d;
+            /* 浏览器提前优化transform动画 */
+            will-change: transform;
+            /* 禁止选中文本 */
+            user-select: none;
+            /* 禁止元素拖动 */
+            -webkit-user-drag: none;
+        }
+        .card:active {
+            cursor: url(./img/hearthstone-grab.png) 10 2, auto;
+        }
+        .card-image {
+            display: block;
+            width: 100%;
+            pointer-events: none;
+            transform-origin: center center;
+            transform-style: preserve-3d;
+            will-change: transform;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- draggable表示不可移动 -->
+        <img class="card-image" src="./img/hearthstone-ragnaros.png" draggable="false" alt="">
+    </div>
+    <script>
+        window.onload = function() {
+            bindEvents();
+        }
+        var holdOne = false,
+            mouseX = 0,
+            mouseY = 0,
+            currentX = 0,
+            currentY = 0,
+            currentScale = 1,
+            currentRotateY = 0,
+            currentRotateX = 0,
+            cardW = 0,
+            cardH = 0;
+        function bindEvents() {
+            let card = $(".card");
+            cardW = $(".card").width();
+            cardH = $(".card").height();
+            currentX = cardW / 2;
+            currentY = cardH / 2;
+            card.on("mousedown", handleMouseDown);
+            $(window).on("mouseup", handleMouseUp);
+            $(window).on("mousemove", handleMouseMove);
+            $(window).on("resize", handleResize);
+            loop();
+        }
+        function handleMouseDown(event) {
+            holdOne = true;
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+        }
+        function handleMouseUp(event) {
+            holdOne = false;
+        }
+        function handleMouseMove(event) {
+            if (holdOne) {
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            }
+        }
+        function loop() {
+            requestAnimationFrame( loop );
+            let targetOffsetX = mouseX - currentX - cardW / 2;
+            let targetOffsetY = mouseY - currentY - cardH / 2;
+            currentX += targetOffsetX * 0.25;
+            currentY += targetOffsetY * 0.25;
+            currentScale += ( (holdOne?1.2:1) - currentScale) * 0.2;
+            $(".card").css({
+                transform: 'translate3d(' + currentX + 'px, ' + currentY + 'px, 0)'
+            })
+            $(".card-image").css({
+                transform: 'scale(' + currentScale + ') rotateY(' + currentRotateY + 'deg) rotateX(' + currentRotateX + 'deg)'
+            })
+        }
+        function handleResize(event) {
+            console.log("resize");
+        }
+    </script>
+</body>
+</html>

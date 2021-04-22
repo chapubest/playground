@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tab</title>
+    <script src="../_common/jquery-3.5.1.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+        .tabs-wrapper {
+            padding: 0 8px;
+        }
+        .tab-list {
+            position: relative;
+            box-sizing: border-box;
+            width: 100%;
+            height: 44px;
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+        }
+        .tab-list::-webkit-scrollbar {
+            display: none;
+        }
+        .tab-list > .tab {
+            padding: 0 12px;
+            line-height: 20px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .tab-list > .active {
+            font-weight: bold;
+        }
+        .tab-list > .tabs-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            width: 40px;
+            height: 3px;
+            border-radius: 3px;
+            background-color: #ee0a24;
+            transition-duration: .3s;
+        }
+        .tab-content > .tab-pane {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="tabs-wrapper">
+            <div class="tab-list">
+                <div class="tab active">
+                    <span class="text">tab1</span>
+                </div>
+                <div class="tab">
+                    <span class="text">tab2</span>
+                </div>
+                <div class="tab">
+                    <span class="text">tab3</span>
+                </div>
+                <div class="tab">
+                    <span class="text">tab4</span>
+                </div>
+                <div class="tabs-line"></div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="tab-content">
+            <section class="tab-pane">
+                this is section 1
+            </section>
+            <section class="tab-pane">
+                this is section 2
+            </section>
+            <section class="tab-pane">
+                this is section 3
+            </section>
+            <section class="tab-pane">
+                this is section 4
+            </section>
+        </div>
+    </main>
+    <script>
+        $(document).ready(function() {
+            transformActiveTab();
+            $(".tab-list>.tab").on("click", function() {
+                $(".tab-list>.active").removeClass("active");
+                $(this).addClass("active");
+                transformActiveTab();
+                let list = $(".tab-list")[0];
+                let needSrcoll = list.scrollWidth > list.clientWidth;
+                if (needSrcoll) {
+                    let scrollLeft = $(this)[0].offsetLeft-list.clientWidth/2;
+                    $(".tab-list").scrollLeft(scrollLeft);
+                }
+            });
+        });
+        function transformActiveTab() {
+            let activeTab = $(".tab-list").children(".active");
+            let left = activeTab[0].offsetLeft + activeTab[0].offsetWidth / 2;
+            $(".tab-list>.tabs-line").css({
+                transform: `translateX(${left}px) translateX(-50%)`
+            });
+            let index = $(".tab-list>.tab").index(activeTab);
+            let pane = $(".tab-content>.tab-pane").eq(index);
+            $(".tab-content>.tab-pane").hide();
+            pane.show();
+        }
+    </script>
+</body>
+</html>

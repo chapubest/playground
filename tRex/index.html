@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>t-Rex</title>
+    <script type="text/javascript" src="../jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="util.js"></script>
+    <script type="text/javascript" src="horizon-line.js"></script>
+    <script type="text/javascript" src="cloud.js"></script>
+    <script type="text/javascript" src="star.js"></script>
+    <script type="text/javascript" src="moon.js"></script>
+    <script type="text/javascript" src="sky.js"></script>
+    <script type="text/javascript" src="obstacle.js"></script>
+    <script type="text/javascript" src="game.js"></script>
+    <style>
+        .game-body {
+            transition: filter 1.5s cubic-bezier(0.65, 0.05, 0.36, 1),
+                        background-color 1.5s cubic-bezier(0.65, 0.05, 0.36, 1);
+            /*告诉浏览器提前准备，优化动画效果*/
+            will-change: filter,background-color;
+        }
+        .game-body canvas {
+            border: 1px solid;
+        }
+        .inverted {
+            /*反色*/
+            filter: invert(100%);
+            background-color: #000;
+        }
+    </style>
+</head>
+    <body class="game-body">
+        <canvas width="600" height="150"></canvas>
+        <img id="imgSprite" src="offline-resources-1x.png" style="display: none;">
+    </body>
+    <script type="text/javascript" src="main.js"></script>
+</html>
