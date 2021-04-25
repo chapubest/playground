@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>文字镂空效果</title>
+        <link rel="stylesheet" href="../_common/normalize.css" />
+        <style>
+            .container {
+                height: 100vh;
+                position: relative;
+            }
+            h1 {
+                z-index: 2;
+                position: absolute;
+                left: 0;
+                top: 0;
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                line-height: 100vh;
+                text-transform: uppercase;
+                font-family: Biko, sans-serif;
+                font-size: 120px;
+                font-weight: bold;
+                background: white;
+                mix-blend-mode: screen;
+            }
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>spring</h1>
+            <img src="./demo.jpg" alt="spring" />
+        </div>
+    </body>
+</html>

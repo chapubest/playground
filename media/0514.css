@@ -1,0 +1,334 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+/*body 样式*/
+body {
+	/*background-color: #16181c;*/
+	background: url("1/cover.jpg") no-repeat;
+	background-position: left top;
+	background-size: 100% 100%;
+	background-attachment: fixed;
+	margin: 0;
+}
+/*动画*/
+@keyframes coverRotating {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+@keyframes needlePlaying {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(30deg);
+	}
+}
+@keyframes needleDisplaying {
+	from {
+		transform: rotate(30deg);
+	}
+	to {
+		transform: rotate(0deg);
+	}
+}
+/*滚动条样式*/
+::-webkit-scrollbar{
+	width: 8px;
+	border-right: 1.5px solid #2f3036;
+}
+::-webkit-scrollbar-thumb{
+	border-radius: 4px;
+	background-color: #2f3036;
+}
+::-webkit-scrollbar-thumb:hover {
+	background-color: #4b4a4d;
+}
+/*毛玻璃样式*/
+.glass {
+	height: 100%;
+	width: 100%;
+	position: relative;
+}
+.glass::before {
+	content: "";
+	position: fixed;
+	background: rgba(22,24,28,0.9);
+	z-index: -1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	backdrop-filter: blur(7px);
+}
+/*content 样式*/
+.content {
+	width: 1000px;
+	margin: 0 auto;
+}
+.play-animation-div {
+/*	background-color: #777;*/
+	width: 250px;
+	height: 400px;
+	padding: 15px;
+	float: left;
+	position: relative;
+}
+.play-animation-div .needle {
+	width: 145px;
+	/*将变换位置点移动到图片中轴心位置*/
+	transform-origin: 16% 19%;
+	/*相对于父元素绝对定位*/
+	position: absolute;
+	z-index: 2;
+	margin-left: 104px;
+}
+.play-animation-div .cover {
+	width: 250px;
+	height: 250px;
+	border-radius: 50%;
+	background-color: #333;
+	box-shadow: 0 0 7.2px 3.6px #555;
+	/*呈现渐变效果*/
+	background-image: linear-gradient(to bottom right, 
+		#111 0%,
+		#222 25%,
+		#444 50%,
+		#222 75%,
+		#111 100%);
+	/*动画速度线性 无限循环 开始为暂停状态*/
+	animation: coverRotating 10s linear infinite;
+	animation-play-state: paused;
+	/*相对于父元素绝对定位*/
+	position: absolute;
+	z-index: 1;
+	margin-top: 50px;
+}
+.play-animation-div .cover img {
+	height: 64%;
+	width: 64%;
+	border-radius: 50%;
+	margin: 18%;
+	box-shadow: 0 0 0 7.5px #222;
+}
+.do {
+	/*动画速度ease-out模式（快->慢） 并保持最后1帧 播放1次 */
+	animation: needlePlaying 1s ease-out;
+	animation-fill-mode: forwards;
+}
+.undo {
+	/*动画速度ease-out模式（快->慢） 并保持最后1帧 播放1次 */
+	animation: needleDisplaying 1s ease-out;
+	animation-fill-mode: forwards;
+}
+.lrc-div {
+	width: 720px;
+	float: left;
+}
+.lrc-div .lrc-list {
+	height: 400px;
+	overflow-y: auto;
+	list-style: none;
+	scroll-behavior: smooth;
+}
+.lrc-div .lrc-list li p{
+	text-align: center;
+	font-size: 14px;
+	height: 40px;
+	line-height: 40px;
+	color: #6c6c6c;
+}
+.lrc-div .lrc-list li:first-child {
+	padding-top: 180px;
+}
+.lrc-div .lrc-list li:nth-last-child(1) {
+	padding-bottom: 180px;
+}
+.lrc-div .lrc-list .light p{
+	color: #fff;
+	font-size: 17px;
+	transition: all 0.2s linear;
+}
+/*control 样式*/
+.control {
+	margin-top: 300px;
+}
+.footer {
+	background-color: #222223;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+}
+.bar-control {
+	width: 1000px;
+	height: 55px;
+	margin: 0 auto;
+}
+.bar-control>div {
+	float: left;
+}
+.btn-play {
+	margin: 6px 10px 6px 10px;
+}
+.btn-play .cricle {
+	height: 40px;
+	width: 40px;
+	border-radius: 50%;
+	border: 1.5px solid #565658;
+}
+.btn-play .logo {
+	margin-top: 10px;
+	margin-left: 13px;
+	height: 0;
+	width: 0;
+	border-style: solid;
+	border-width: 10px 0 10px calc(10px*1.732);
+	border-color: transparent transparent transparent #ffffff;
+	transition: all 0.3s linear;
+}
+#play-pause {
+	display: none;
+}
+#play-pause:checked+.btn .logo{
+	border-style: double;
+	border-width: 0 0 0 15px;
+	height: 20px;
+}
+.btn-last {
+	margin: 9px 10px 9px 25px;
+}
+.btn-last .cricle {
+	height: 34px;
+	width: 34px;
+	border-radius: 50%;
+	border: 1.5px solid #565658;
+}
+.btn-last .logo {
+	margin-top: 10px;
+	margin-left: 10px;
+}
+.btn-last .logo-l {
+	float: left;
+	height: 14px;
+	width: 2px;
+	background-color: #fff;
+}
+.btn-last .logo-tri {
+	float: left;
+	height: 0;
+	width: 0;
+	border-style: solid;
+	border-width: 7px calc(7px*1.732) 7px 0;
+	border-color: transparent  #ffffff transparent transparent;
+}
+.btn-next {
+	margin: 9px 25px 9px 10px;
+}
+.btn-next .cricle {
+	height: 34px;
+	width: 34px;
+	border-radius: 50%;
+	border: 1.5px solid #565658;
+}
+.btn-next .logo {
+	margin-top: 10px;
+	margin-left: 10px;
+}
+.btn-next .logo-l {
+	float: left;
+	height: 14px;
+	width: 2px;
+	background-color: #fff;
+}
+.btn-next .logo-tri {
+	float: left;
+	height: 0;
+	width: 0;
+	border-style: solid;
+	border-width: 7px 0 7px calc(7px*1.732);
+	border-color: transparent  transparent transparent #ffffff;
+}
+.cricle {
+	cursor: pointer;
+}
+.cricle:hover {
+	border-color: #fff;
+	
+}
+.label-now-point {
+	color: #fff;
+	font-size: 0.8em;
+	height: 55px;
+	line-height: 55px;
+}
+.label-end-point {
+	color: #fff;
+	font-size: 0.8em;
+	height: 55px;
+	line-height: 55px;
+}
+.time-line {
+	position: relative;
+}
+
+.time-line .line-bg {
+	width: 500px;
+	height: 5px;
+	margin: 25px 10px;
+	border-radius: 2.5px;
+	background-color: #000;
+	cursor: pointer;
+}
+.time-line .line-pr {
+	width: 0px;
+	height: 5px;
+	border-radius: 2.5px;
+	background-color: #c70c0c;
+	position: absolute;
+	top: 25px;
+	left: 10px;
+	z-index: 2;
+	cursor: pointer;
+}
+.time-line .line-btn {
+	position: absolute;
+	height: 13px;
+	width: 13px;
+	top: 21px;
+	left: 6px;
+	z-index: 3;
+	cursor: pointer;
+}
+.time-line .dot {
+	height: 5px;
+	width: 5px;
+	border-radius: 2.5px;
+	background-color: #c70c0c;
+	box-shadow: 0 0 0 4px #fff;
+	margin: 4px;
+}
+.time-line .line-btn:hover .dot{
+	/*在原有基础上加2px宽的发光效果*/
+	box-shadow: 0 0 2px 6px #fff;
+}
+.select-no {
+	user-select: none;
+}
+.btn-voice {
+	margin: 17.5px 5px;
+ }
+.btn-voice .logo {
+	width: 20px;
+	height: 20px;
+}
+.btn-play-mode {
+	margin: 17.5px 5px;
+ }
+.btn-play-mode .logo {
+	width: 20px;
+	height: 20px;
+}

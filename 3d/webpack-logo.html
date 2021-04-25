@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>webpack图标</title>
+        <link rel="stylesheet" href="../_common/normalize.css" />
+        <style>
+            .container {
+                height: 100vh;
+                background-color: #2b3a42;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .logo-body {
+                position: relative;
+                margin: 30px;
+                width: 120px;
+                height: 120px;
+                transform: rotateX(-33.5deg) rotateY(-45deg);
+                transform-style: preserve-3d;
+            }
+            .cube-body {
+                position: absolute;
+                height: 120px;
+                width: 120px;
+                transform-style: preserve-3d;
+                transition: transform 0.8s;
+            }
+            .cube-body > div {
+                position: absolute;
+                left: 0;
+                top: 0;
+                box-sizing: border-box;
+                height: 120px;
+                width: 120px;
+                line-height: 120px;
+                text-align: center;
+                border: 1px solid #fff;
+                background-color: rgba(141, 214, 249, 0.5);
+                transition: border 0.8s;
+            }
+            .cube-body.inner {
+                transform: scale3d(0.5, 0.5, 0.5);
+            }
+            .cube-body.inner > div {
+                background-color: #175d96;
+            }
+            .cube-body .front {
+                transform: translateZ(60px);
+            }
+            .cube-body .back {
+                transform: translateZ(-60px) rotateY(180deg);
+            }
+            .cube-body .left {
+                transform: translateX(-60px) rotateY(-90deg);
+            }
+            .cube-body .right {
+                transform: translateX(60px) rotateY(90deg);
+            }
+            .cube-body .top {
+                transform: translateY(-60px) rotateX(90deg);
+            }
+            .cube-body .bottom {
+                transform: translateY(60px) rotateX(-90deg);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo">
+                <div class="logo-body">
+                    <div class="cube-body outer">
+                        <div class="front"></div>
+                        <div class="back"></div>
+                        <div class="left"></div>
+                        <div class="right"></div>
+                        <div class="top"></div>
+                        <div class="bottom"></div>
+                    </div>
+                    <div class="cube-body inner">
+                        <div class="front"></div>
+                        <div class="back"></div>
+                        <div class="left"></div>
+                        <div class="right"></div>
+                        <div class="top"></div>
+                        <div class="bottom"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="../_common/jquery-3.5.1.js"></script>
+        <script>
+            var topFaceBorderIndex = 0;
+            var rotateY = 0;
+            var timer = null;
+            function setOuterBorder() {
+                const topFaceBorderList = [
+                    "6px 1px 1px 6px",
+                    "6px 6px 1px 1px",
+                    "1px 6px 6px 1px",
+                    "1px 1px 6px 6px",
+                ];
+                const faceList = ["front", "left", "back", "right"];
+                var cube = $(".outer");
+                var leftFaceName = faceList[topFaceBorderIndex];
+                var rightFaceName =
+                    topFaceBorderIndex === 0
+                        ? faceList[3]
+                        : faceList[topFaceBorderIndex - 1];
+                cube.children().css("border-width", "");
+                cube.children(".top").css(
+                    "border-width",
+                    topFaceBorderList[topFaceBorderIndex]
+                );
+                cube.children("." + leftFaceName).css(
+                    "border-width",
+                    "1px 1px 6px 6px"
+                );
+                cube.children("." + rightFaceName).css(
+                    "border-width",
+                    "1px 6px 6px 1px"
+                );
+            }
+            setOuterBorder();
+            timer = setInterval(() => {
+                rotateY += 90;
+                topFaceBorderIndex++;
+                if (topFaceBorderIndex > 3) {
+                    topFaceBorderIndex = 0;
+                }
+                $(".outer").css({
+                    transform: `rotateY(${rotateY}deg)`,
+                });
+                $(".inner").css({
+                    transform: `scale3d(.5, .5, .5) rotateY(-${rotateY}deg)`,
+                });
+                setOuterBorder();
+            }, 2500);
+        </script>
+    </body>
+</html>

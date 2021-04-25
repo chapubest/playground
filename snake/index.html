@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>贪吃蛇</title>
+	<style type="text/css">
+		body {
+			margin: 0;
+			background-color: #eee;
+		}
+		canvas {
+			background-color: #fff;
+		}
+		#menuBar {
+			height: 25px;
+			background-color: #456;
+			color: #fff;
+		}
+		#menuBar div {
+			height: 100%;
+			line-height: 25px;
+			text-align: center;
+		}
+		#gameArea {
+			background-color: #456;
+			margin: 0 auto;
+		}
+		
+	</style>
+	<script type="text/javascript">
+		var winWidth = null;
+		var winHeight = null;
+
+		// 用户可以看到的地图大小
+		var map_h = 40;
+		var map_w = 24;
+		var cell_w = null;
+		var speed = 600;
+
+		var map = new Array();
+		for (var i = 0; i < map_h; i++) {
+			map[i] = new Array();
+			for (var j = 0; j < map_w; j++) {
+				map[i][j] = 0;
+			}
+		}
+		var snack = [];
+		var last_way = 0;
+		var next_way = 0;
+		var food_num = 0;
+		resetGame();
+
+		var c = null;
+		var ctx=null;
+		var gameTimer = null;
+
+		window.onload= function() {
+			c = document.getElementById("snackCanvas");
+			ctx=c.getContext("2d");
+			resetArea();
+
+			gameTimer = setInterval("updateMap()",speed);
+		}
+		// 重置游戏区域大小
+		function resetArea() {
+			// 获取窗口宽度
+			if (window.innerWidth)
+			winWidth = window.innerWidth;
+			else if ((document.body) && (document.body.clientWidth))
+			winWidth = document.body.clientWidth;
+			// 获取窗口高度
+			if (window.innerHeight)
+			winHeight = window.innerHeight;
+			else if ((document.body) && (document.body.clientHeight))
+			winHeight = document.body.clientHeight;
+
+			var area = document.getElementById("gameArea");
+			
+
+			area.style.height = winHeight+"px";
+			
+
+
+			cell_w = Math.floor((winHeight-25)/map_h);
+			area.style.width = cell_w*map_w+"px";
+			c.height = cell_w*map_h;
+			c.width = cell_w*map_w;
+
+		}
+		document.onkeydown=function(event){
+			var e = event || window.event || arguments.callee.caller.arguments[0];
+			if (e && e.keyCode==87) { //w
+				if (last_way != 1){
+					next_way = 0;
+					console.log("上");
+				}
+			}
+			if (e && e.keyCode==65) { //a
+				if (last_way != 3){
+					next_way = 2;
+					console.log("左");
+				}
+			}
+			if (e && e.keyCode==83) { //s
+				if (last_way != 0){
+					next_way = 1;
+					console.log("下");
+				}
+			}
+			if (e && e.keyCode==68) { //d
+				if (last_way != 2){
+					next_way = 3;
+					console.log("右");
+				}
+			}
+		}
+		function resetGame() {
+			for (var i = 0; i < map_h; i++) {
+				for (var j = 0; j < map_w; j++) {
+					map[i][j] = 0;
+				}
+			}
+			snack = [];
+			// 初始化蛇运行方向为上
+			last_way = 0;
+			next_way = last_way;
+
+			food_num = 0;
+			var i = Math.floor(map_h/2);
+			var j = Math.floor(map_w/2);
+			map[i][j] = 1;
+			map[i+1][j] = 1;
+
+			var s_head = {i:i,j:j};
+			var s_body = {i:i+1,j:j};
+			var s_tail = {i:i+2,j:j};
+			snack.push(s_head)
+			snack.push(s_body)
+			snack.push(s_tail)
+		}
+		function updateMap() {
+			switch(next_way) {
+				case 0:
+				// 向上
+					// 蛇头原本的位置
+					var last_s_head = snack[0];
+					var i = (last_s_head.i+map_h-1)%map_h;
+					// 蛇头新的位置
+					var new_s_head = {i:i,j:last_s_head.j};
+					// 撞到墙或者蛇游戏结束
+					if (map[new_s_head.i][new_s_head.j] == 2 || map[new_s_head.i][new_s_head.j] == 1) {
+						clearInterval(gameTimer);
+						console.log("游戏结束");
+						return;
+					}
+					if (map[new_s_head.i][new_s_head.j] < 3){//不是食物
+						var last_tail = snack.pop();
+						map[last_tail.i][last_tail.j] = 0;
+					}else {
+						food_num--;
+					}
+					snack.unshift(new_s_head);
+					map[new_s_head.i][new_s_head.j] = 1;
+					last_way = next_way;
+					break;
+				case 1:
+				// 向下
+					var last_s_head = snack[0];
+					var i = (last_s_head.i+map_h+1)%map_h;
+					var new_s_head = {i:i,j:last_s_head.j};
+					// 撞到墙或者蛇游戏结束
+					if (map[new_s_head.i][new_s_head.j] == 2 || map[new_s_head.i][new_s_head.j] == 1) {
+						clearInterval(gameTimer);
+						console.log("游戏结束");
+						return;
+					}
+					if (map[new_s_head.i][new_s_head.j] < 3){//不是食物
+						var last_tail = snack.pop();
+						map[last_tail.i][last_tail.j] = 0;
+					}else {
+						food_num--;
+					}
+					snack.unshift(new_s_head);
+					map[new_s_head.i][new_s_head.j] = 1;
+					last_way = next_way;
+					break;
+				case 2:
+				// 向左
+					var last_s_head = snack[0];
+					var j = (last_s_head.j+map_w-1)%map_w;
+					var new_s_head = {i:last_s_head.i,j:j};
+					// 撞到墙或者蛇游戏结束
+					if (map[new_s_head.i][new_s_head.j] == 2 || map[new_s_head.i][new_s_head.j] == 1) {
+						clearInterval(gameTimer);
+						console.log("游戏结束");
+						return;
+					}
+					if (map[new_s_head.i][new_s_head.j] < 3){//不是食物
+						var last_tail = snack.pop();
+						map[last_tail.i][last_tail.j] = 0;
+					}else {
+						food_num--;
+					}
+					snack.unshift(new_s_head);
+					map[new_s_head.i][new_s_head.j] = 1;
+					last_way = next_way;
+					break;
+				case 3:
+				// 向右
+					var last_s_head = snack[0];
+					var j = (last_s_head.j+map_w+1)%map_w;
+					var new_s_head = {i:last_s_head.i,j:j};
+					// 撞到墙或者蛇游戏结束
+					if (map[new_s_head.i][new_s_head.j] == 2 || map[new_s_head.i][new_s_head.j] == 1) {
+						clearInterval(gameTimer);
+						console.log("游戏结束");
+						return;
+					}
+					if (map[new_s_head.i][new_s_head.j] < 3){//不是食物
+						var last_tail = snack.pop();
+						map[last_tail.i][last_tail.j] = 0;
+					}else {
+						food_num--;
+					}
+					snack.unshift(new_s_head);
+					map[new_s_head.i][new_s_head.j] = 1;
+					last_way = next_way;
+					break;
+			}
+			createFood();
+			draw();
+		}
+		function createFood() {
+			if (food_num == 0){
+				var seed = Math.floor(Math.random()*(map_w*map_h-snack.length));
+				for (var i = 0; i < map_h; i++) {
+					for (var j = 0; j < map_w; j++) {
+						if (map[i][j]==0){
+							if (seed == 0) {
+								map[i][j] = 3;
+								food_num++;
+								return;
+							}
+							seed--;
+						}
+					}
+				}
+			}
+		}
+		function draw() {
+			ctx.clearRect(0,0,1000,600);
+			for (var i = 0; i < map_h; i++) {
+				for (var j = 0; j < map_w; j++) {
+					switch(map[i][j]) {
+						case 0: ctx.fillStyle="#abb1ba";break;
+						case 1: ctx.fillStyle="#f92472";break;
+						case 3: ctx.fillStyle="#000000";break;
+					}
+					ctx.fillRect(j*cell_w+1,i*cell_w+1,cell_w-2,cell_w-2);
+				}
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="gameArea">
+		<div id="menuBar">
+			<div>贪吃蛇</div>
+		</div>
+		<canvas id="snackCanvas"></canvas>
+	</div>
+</body>
+</html>

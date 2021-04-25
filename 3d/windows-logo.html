@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>windows图标</title>
+        <link rel="stylesheet" href="../_common/normalize.css" />
+        <style>
+            .container {
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .logo {
+                perspective: 500px;
+                /* 元素的子元素是位于 3D 空间中，具有遮挡关系 */
+                transform-style: preserve-3d;
+            }
+            .logo-body {
+                width: 200px;
+                height: 150px;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-gap: 8px;
+                transform: rotateY(-20deg);
+            }
+            .logo-body .cube {
+                background-color: #aaa;
+                border-radius: 2px;
+                transition: background-color .5s;
+            }
+            .logo-body:hover .cube {
+                background-color: #1885d8;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo">
+                <div class="logo-body">
+                    <div class="cube"></div>
+                    <div class="cube"></div>
+                    <div class="cube"></div>
+                    <div class="cube"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>工具</title>
+	<style type="text/css">
+		.border {
+			background-color: #ddd;
+			border:solid 1px #999;
+			padding: 25px;
+		}
+		input[type=number] {
+			width: 80px;
+		}
+		input[name=color] {
+			vertical-align: top;
+		}
+		button {
+			background-color: #a6e228;
+		}
+		textarea {
+			vertical-align: top;
+			resize: none;
+			width: 400px;
+			height: 100px;
+		}
+		a {
+			text-decoration: none;
+		}
+		.canvas-box {
+			padding: 10px;
+			margin: 10px;
+		}
+		.canvas-box canvas {
+			/*background-color: #ffffff;*/
+		}
+	</style>
+	<script type="text/javascript">
+		'use strict';
+
+		var map = {
+			size: {x: 10, y: 10, min: 2, max: 64, width: null, height: null},
+			cell: {size: null, min_size: 13, max_size: 40},
+			color: '#000000',
+			ctx: null,
+			body: null
+		};
+		window.onload = function() {
+			console.log('ready');
+			var ipt_color = document.getElementsByName('color')[0];
+			ipt_color.defaultValue = map.color;
+			var ipt_size_x = document.getElementsByName('size_x')[0];
+			var ipt_size_y = document.getElementsByName('size_y')[0];
+			ipt_size_x.min = map.size.min;
+			ipt_size_x.max = map.size.max;
+			ipt_size_x.value = map.size.x;
+			ipt_size_y.min = map.size.min;
+			ipt_size_y.max = map.size.max;
+			ipt_size_y.value = map.size.y;
+			// 关于canvas
+			var canvas = document.getElementById('my-canvas');
+			canvas.width = map.size.width;
+			canvas.height = map.size.height;
+			map.ctx = canvas.getContext('2d');
+		}
+		function changeSizeX() {
+			console.log("changeX");
+			var ipt_size_x = document.getElementsByName('size_x')[0];
+			var ipt_size_y = document.getElementsByName('size_y')[0];
+			var in_x = ipt_size_x.value;
+
+			in_x = Math.max(in_x, 0);
+			in_x = Math.min(in_x, map.size.max);
+			ipt_size_x.value = in_x;
+			ipt_size_y.value = in_x;
+		}
+		function changeSizeY() {
+			console.log("changeY");
+			var ipt_size_x = document.getElementsByName('size_x')[0];
+			var ipt_size_y = document.getElementsByName('size_y')[0];
+			var in_y = ipt_size_y.value;
+
+			in_y = Math.max(in_y, 0);
+			in_y = Math.min(in_y, map.size.max);
+			ipt_size_y.value = in_y;
+		}
+		function blurSize() {
+			console.log("blur");
+			var ipt_size_x = document.getElementsByName('size_x')[0];
+			var ipt_size_y = document.getElementsByName('size_y')[0];
+			var in_x = ipt_size_x.value;
+			var in_y = ipt_size_y.value;
+			
+			ipt_size_y.value = Math.max(in_y, map.size.min);
+			ipt_size_x.value = Math.max(in_x, map.size.min);
+		}
+		function changeColor() {
+			console.log("changeColor");
+			var ipt_color = document.getElementsByName('color')[0];
+			map.color = ipt_color.value;
+		}
+		function clickGo() {
+			var canvas = document.getElementById('my-canvas');
+			var ipt_size_x = document.getElementsByName('size_x')[0];
+			var ipt_size_y = document.getElementsByName('size_y')[0];
+			map.size.x = ipt_size_x.value;
+			map.size.y = ipt_size_y.value;
+			map.cell.size = Math.min(map.size.x,map.size.y)<15?map.cell.max_size:map.cell.min_size;
+			map.size.width = map.cell.size * map.size.x;
+			map.size.height = map.cell.size * map.size.y;
+			canvas.width = map.size.width;
+			canvas.height = map.size.height;
+			map.body = new Array();
+			for(let i =0;i<map.size.x;i++) {
+				map.body[i] = new Array();
+				for(let j =0;j<map.size.y;j++) {
+					map.body[i][j] = 0;
+				}
+			}
+			draw();
+		}
+		function draw() {
+			map.ctx.clearRect(0,0,map.size.width,map.size.height);
+			for(let i =0;i<map.size.x;i++) {
+				for(let j =0;j<map.size.y;j++) {
+					if(map.body[i][j]===0){
+						if(map.color==='#ffffff'){
+							map.ctx.fillStyle = '#000000';
+						}else {
+							map.ctx.fillStyle = '#ffffff';
+						}
+					}else {
+						map.ctx.fillStyle = map.color;
+					}
+					map.ctx.fillRect(0.5+j*map.cell.size,0.5+i*map.cell.size,map.cell.size-1,map.cell.size-1);
+				}
+			}
+		}
+		function clickCanvas(event) {
+			var click_j = Math.floor(event.offsetX/map.cell.size);
+			var click_i = Math.floor(event.offsetY/map.cell.size);
+			if(map.body[click_i][click_j]===1){
+				map.body[click_i][click_j] = 0;
+			}else{
+				map.body[click_i][click_j] = 1;
+			}
+			draw();
+		}
+		function clickOut() {
+			var auto_body = map.body.slice();
+			var left=0;
+			var right=0;
+			var top =0;
+			var bottom=0;
+			for (let i=0;i<map.size.y;i++){
+				let flg = false;
+				for (let j=0;j<map.size.x;j++){
+					if(auto_body[i][j]!==0){
+						flg = true;
+						break;
+					}
+				}
+				if(!flg){
+					top++;
+				}else {
+					break;
+				}
+			}
+			for (let i=map.size.y-1;i>=0;i--){
+				let flg = false;
+				for (let j=0;j<map.size.x;j++){
+					if(auto_body[i][j]!==0){
+						flg = true;
+						break;
+					}
+				}
+				if(!flg){
+					bottom++;
+				}else {
+					break;
+				}
+			}
+			for (let j=0;j<map.size.x;j++){
+				let flg = false;
+				for (let i=0;i<map.size.y;i++){
+					if(auto_body[i][j]!==0){
+						flg = true;
+						break;
+					}
+				}
+				if(!flg){
+					left++;
+				}else {
+					break;
+				}
+			}
+			for (let j=map.size.x-1;j>=0;j--){
+				let flg = false;
+				for (let i=0;i<map.size.y;i++){
+					if(auto_body[i][j]!==0){
+						flg = true;
+						break;
+					}
+				}
+				if(!flg){
+					right++;
+				}else {
+					break;
+				}
+			}
+			var area_out = document.getElementById('out-area');
+			var auto_body = auto_body.slice(top,map.size.y-bottom);
+			for(let i =0;i<auto_body.length;i++) {
+				auto_body[i] = auto_body[i].slice(left,map.size.x-right);
+			}
+			area_out.value = JSON.stringify(auto_body);
+		}
+		function clickCopy() {
+			var area_out = document.getElementById('out-area');
+			var input = document.createElement('input');
+			input.setAttribute('readonly', 'readonly');
+			input.setAttribute('value', area_out.value);
+			document.body.appendChild(input);
+			input.select();
+			input.setSelectionRange(0, 9999);
+			document.execCommand('Copy');
+			document.body.removeChild(input);
+			if (document.execCommand('Copy')) {
+				console.log('复制成功');
+			}
+		}
+	</script>
+</head>
+<body>
+	<div>
+		<h1>像素画转json</h1>
+		<div class="border">
+			<label>
+				请输入像素画大小:
+				<input type="number" name="size_x" oninput="changeSizeX()" onblur="blurSize()">
+				x
+				<input type="number" name="size_y" oninput="changeSizeY()" onblur="blurSize()">
+			</label>
+			<input type="color" name="color" onchange="changeColor()">
+			<button class="go" onclick="clickGo()">新建+</button>
+			<div class="canvas-box">
+				<canvas id="my-canvas" onclick="clickCanvas(event)"></canvas>
+			</div>
+			<button onclick="clickOut()">生成</button>
+			<textarea rows="4" disabled="true" id="out-area"></textarea>
+			<a href="#" onclick="clickCopy()">复制</a>
+		</div>
+	</div>
+</body>
+</html>

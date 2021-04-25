@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ios 日历应用图标</title>
+    <link rel="stylesheet" href="../_common/normalize.css">
+    <script src="../_common/vue.js"></script>
+    <style>
+        body {
+			background-color: black;
+			color: white;
+		}
+        p {
+            margin: 0;
+        }
+		#app>p:first-child {
+			font-size: 2em;
+		}
+		.cube {
+			width: 80px;
+			height: 80px;
+			border-radius: 25%;
+			background-color: white;
+		}
+		.cube .week {
+			padding-top: 10px;
+			color: red;
+			font-size: 14px;
+			font-weight: 500;
+			text-align: center;
+		}
+		.cube .day {
+			color: black;
+			font-size: 50px;
+			font-weight: 100;
+			text-align: center;
+		}
+    </style>
+</head>
+<body>
+    <div id="app">
+		<div class="cube">
+			<p class="week"> {{ week }} </p>
+			<p class="day"> {{ date }} </p>
+		</div>
+	</div>
+    <script type="text/javascript">
+		var week_str = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				hour: 0,
+				minute: 0,
+				second: 0,
+				month: 0,
+				date: 0,
+				week: '星期',
+			},
+		});
+		setInterval(function() {
+			var da= new Date();
+			vm.hour = da.getHours();
+			vm.minute = ('00'+da.getMinutes()).slice(-2);
+			vm.second = ('00'+da.getSeconds()).slice(-2);
+			vm.month = da.getMonth()+1;
+			vm.date = da.getDate();
+			vm.week = week_str[da.getDay()];
+		},1000);
+	</script>
+</body>
+</html>

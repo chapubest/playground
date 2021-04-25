@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>音乐播放器</title>
+	<script type="text/javascript">
+		var G_timer = null;
+		var G_isInTimeLineDown = false;
+		// 歌词JSON文件
+		var lrcJSON = {
+			"[00:02]":"例えば君の顔に昔よりシワが増えても",
+			"[00:09]":"それでもいいんだ",
+			"[00:11]":"僕がギターを思うように弾けなくなっても",
+			"[00:16]":"心の歌は君で溢れているよ",
+			"[00:20]":"高い声も出せずに思い通り歌えない",
+			"[00:55]":"「愛してる」",
+			"[00:58]":"たった一度の たった一人の",
+			"[01:08]":"今日がメインディッシュで",
+			"[01:10]":"終わりの日には甘酸っぱいデザートを食べるの",
+			"[01:14]":"山も谷も全部フルコースで",
+			"[01:23]":"ただずっと ずっと側に置いていてよ",
+			"[01:37]":"ねえ、Darlin' 夢が叶ったの",
+			"[01:42]":"お似合いの言葉が見つからないよ",
+			"[01:52]":"愛が溢れていく",
+			"[02:27]":"それでもいいから",
+			"[02:39]":"生まれ変わったとしても 出会い方が最悪でも",
+			"[02:55]":"分かってよ 分かってよ 分かってよ",
+			"[00:00.000]":" 作曲 : 内澤崇仁",
+			"[00:01.000]":" 作词 : 内澤崇仁",
+			"[00:25.55]":"それでもうなずきながら一緒に歌ってくれるかな",
+			"[00:30.55]":"割れんばかりの拍手も 響き渡る歓声もいらない",
+			"[00:35.55]":"君だけ 分かってよ 分かってよ",
+			"[00:40.55]":"Darlin' 夢が叶ったの",
+			"[00:45.55]":"お似合いの言葉が見つからないよ",
+			"[00:50.66]":"Darlin' 夢が叶ったの",
+			"[01:02.55]":"生まれてきた幸せ味わってるんだよ",
+			"[01:17.55]":"気が利くような言葉はいらない",
+			"[01:20.55]":"素晴らしい特別もいらない",
+			"[01:27.87]":"僕の想いは歳をとると増えてくばっかだ 好きだよ",
+			"[01:33.55]":"分かってよ 分かってよ",
+			"[01:47.55]":"Darlin' 夢が叶ったの",
+			"[02:19.55]":"君が僕を忘れてしまっても ちょっと辛いけど…",
+			"[02:29.55]":"僕より先に どこか遠くに",
+			"[02:34.33]":"旅立つことは 絶対 許さないから",
+			"[02:44.55]":"また僕は君に恋するんだよ",
+			"[02:49.55]":"僕の心は君にいつも片想い 好きだよ",
+			"[03:01.55]":"Darlin' 夢が叶ったの",
+			"[03:06.55]":"お似合いの言葉が見つからないよ",
+			"[03:11.55]":"Darlin' 夢が叶ったの",
+			"[03:16.55]":"ねえ Darlin' 「愛してる」"
+		}
+		// 解析后的歌词
+		var lrc = [];
+		// 当前播放的歌词行数
+		var onLrcLineNum = null;
+		var lrcTimer = null;
+		window.onload=function() {
+			document.body.style.minHeight = window.innerHeight+"px";
+			loadLrc();
+			updateControlBar();
+		}
+		// 点击播放/暂停按钮
+		function play(playPause) {
+			var needle = document.getElementsByClassName('needle')[0];
+			var cover = document.getElementsByClassName('cover')[0];
+			var control = document.getElementsByClassName('control')[0];
+			if(playPause.checked) {
+				// 移动指针
+				needle.className = "needle do";
+				// 延迟0.7s
+				setTimeout(function(){
+					if(playPause.checked) {
+						// 转动唱片
+						cover.style.animationPlayState = "running";
+						// 播放音乐
+						if(control != null){
+							if(control.paused){
+								control.play();
+								scrollLrc();
+							}
+						}
+						listenPlayer();
+					}
+				},700);
+			}else {
+				// 暂停音乐
+				if(control != null){
+					if(!control.paused){
+						control.pause();
+						clearTimeout(lrcTimer);
+					}
+				}
+				// 移动指针
+				needle.className = "needle undo";
+				// 暂停转动唱片
+				cover.style.animationPlayState = "paused";
+			}
+		}
+		// 更新时间轴和时间标签
+		function updateControlBar() {
+			var audio = document.getElementsByClassName('control')[0];
+			var linePr = document.getElementsByClassName('line-pr')[0];
+			var lineBtn = document.getElementsByClassName('line-btn')[0];
+			var endSecond = audio.duration;
+			var nowSecond = audio.currentTime;
+			var m = Math.floor(nowSecond/60);
+			var s = Math.floor(nowSecond%60);
+			m = (m<10)?("0"+m):m;
+			s = (s<10)?("0"+s):s;
+			document.getElementsByClassName('label-now-point')[0].innerHTML = m+":"+s;
+			m = Math.floor(endSecond/60);
+			s = Math.floor(endSecond%60);
+			m = (m<10)?("0"+m):m;
+			s = (s<10)?("0"+s):s;
+			document.getElementsByClassName('label-end-point')[0].innerHTML = m+":"+s;
+			var len = 500*nowSecond/endSecond;
+			linePr.style.width = len+"px";
+			lineBtn.style.left = (len+6)+"px";
+			// 更新滚动的歌词行
+			updateScrollLrc();
+		}
+		// 监听音乐播放进度
+		function listenPlayer() {
+			G_timer = setInterval(function(){
+				var playPause = document.getElementById('play-pause');
+				var audio = document.getElementsByClassName('control')[0];
+				if(!playPause.checked){
+					clearInterval(G_timer);
+				}
+				// 播放完毕
+				if(audio.ended) {
+					playPause.checked = false;
+					play(playPause);
+				}
+				updateControlBar();
+			},1000);
+		}
+		// 点击音乐时间轴
+		function clickTimeLine() {
+			var lineBg = document.getElementsByClassName('line-bg')[0];
+			var audio = document.getElementsByClassName('control')[0];
+			var xy = getAbsPosition(lineBg);
+			var thisX = xy.left;
+			var thisY = xy.top;
+			// console.log(thisX+"-"+thisY);
+			var e = event || window.event;
+			// console.log(e.clientX+"-"+e.clientY);
+			var endSecond = audio.duration;
+			var nowSecond = audio.currentTime;
+			if (e.clientX>thisX && (e.clientX-thisX)<500){
+				audio.currentTime = (e.clientX-thisX)/500*endSecond;
+				updateControlBar();
+			}
+		}
+		function downTimeLine() {
+			G_isInTimeLineDown = true;
+		}
+		function moveTimeLine() {
+			if(G_isInTimeLineDown) {
+				clickTimeLine();
+			}
+		}
+		function upTimeLine() {
+			if(G_isInTimeLineDown) {
+				G_isInTimeLineDown = false;
+			}
+		}
+		function getAbsPosition(obj) {
+			if(!obj) return null;
+			var l,t;
+			for(t=obj.offsetTop,l=obj.offsetLeft;obj=obj.offsetParent;){
+				t+=obj.offsetTop;
+				l+=obj.offsetLeft;
+			}
+			return {top:t,left:l};
+		}
+		function mySort(a,b) {
+			return a-b;
+		}
+		// 解析JSON文件,加载歌词
+		function loadLrc() {
+			var lrcList = document.getElementsByClassName("lrc-list")[0];
+			// 记录所有时间
+			var lrcTime = [];
+			// 记录时间对应歌词
+			var lrcLink = {};
+			for(var key in lrcJSON) {
+				var t = key.replace(/^\[/gi,"").replace(/\]$/gi,"");
+				var op = parseFloat(t.substr(0,2))*60+parseFloat(t.substr(3));
+				var ts = parseFloat(op.toFixed(3));
+				lrcTime.push(ts);
+				lrcLink[ts] = lrcJSON[key];
+			}
+			lrcTime.sort(mySort);
+			for(var ts in lrcTime) {
+				lrc.push({offset:lrcTime[ts],scrollTop:0,text:lrcLink[lrcTime[ts]]});
+				lrcList.innerHTML += "<li><p class='text'>"+lrcLink[lrcTime[ts]]+"</p></li>";
+			}
+			for(var i=1;i<lrc.length;i++) {
+				lrc[i].scrollTop = lrc[i-1].scrollTop+lrcList.children[i-1].offsetHeight/2+lrcList.children[i].offsetHeight/2;
+				if(i==1||i==lrc.length-1){
+					lrc[i].scrollTop-=90;
+				}
+			}
+			onLrcLineNum= 0;
+			console.log(lrc);
+		}
+		// 更新歌词滚动条
+		function updateScrollLrc() {
+			var audio = document.getElementsByClassName('control')[0];
+			var nowSecond = audio.currentTime;
+			// 纠正当前滚动行错误
+			if((onLrcLineNum<lrc.length-1 && nowSecond>lrc[onLrcLineNum+1].offset)
+				|| nowSecond<lrc[onLrcLineNum].offset){
+				for(var i=0; i<lrc.length;i++) {
+					if(lrc[i].offset>nowSecond){
+						break;
+					}
+				}
+				onLrcLineNum = i-1;
+			}
+			console.log(onLrcLineNum);
+			var lrcList = document.getElementsByClassName("lrc-list")[0];
+			// 滚动到正确行
+			for(var i=0;i<lrc.length;i++){
+				lrcList.children[i].className="";
+			}
+			lrcList.children[onLrcLineNum].className="light";
+			lrcList.scrollTop = lrc[onLrcLineNum].scrollTop;
+		}
+		// 滚动歌词
+		function scrollLrc() {
+			updateScrollLrc();
+			var audio = document.getElementsByClassName('control')[0];
+			// 已经播放到最后一行
+			if(onLrcLineNum==lrc.length-1){
+				var timeout = audio.duration - audio.currentTime;
+				if(timeout>0) {
+					lrcTimer = setTimeout("scrollLrc()", Math.round(timeout*1000));
+				}
+			}else {
+				var timeout = lrc[onLrcLineNum+1].offset - audio.currentTime;
+				// 播放的下一行
+				onLrcLineNum += 1;
+				if(timeout>0) {
+					lrcTimer = setTimeout("scrollLrc()", Math.round(timeout*1000));
+				}
+			}
+		}
+	</script>
+	<link rel="stylesheet" type="text/css" href="0514.css">
+</head>
+<body onmouseup="upTimeLine()">
+	<div class="glass"></div>
+	<div class="content">
+		<div class="play-animation-div">
+			<img class="needle" src="./images/needle.png">
+			<div class="cover">
+				<img src="1/cover.jpg">
+			</div>
+		</div>
+		<div class="lrc-div">
+			<ul class="lrc-list"></ul>
+		</div>
+	</div>
+	<div class="footer">
+		<audio class="control" src="1/music.mp3">(っ °Д °;)っ您的浏览器不支持audio</audio>
+		<div class="bar-control">
+			<div class="btn-last" title="上一首">
+				<div class="cricle">
+					<div class="logo">
+						<div class="logo-l"></div>
+						<div class="logo-tri"></div>
+					</div>
+				</div>
+			</div>
+			<div class="btn-play" title="播放/暂停">
+				<input type="checkbox" id="play-pause" onclick="play(this)">
+				<label for="play-pause" class="btn">
+					<div class="cricle">
+						<div class="logo"></div>
+					</div>
+				</label>
+			</div>
+			<div class="btn-next" title="下一首">
+				<div class="cricle">
+					<div class="logo">
+						<div class="logo-tri"></div>
+						<div class="logo-l"></div>
+					</div>
+				</div>
+			</div>
+			<div class="label-now-point select-no">00:00</div>
+			<div class="time-line" onmousemove="moveTimeLine()">
+				<div class="line-bg" onmousedown="clickTimeLine()"></div>
+				<div class="line-pr" onmousedown="clickTimeLine()"></div>
+				<div class="line-btn" onmousedown="downTimeLine()">
+					<div class="dot"></div>
+				</div>
+			</div>
+			<div class="label-end-point select-no">00:00</div>
+			<div class="btn-voice" title="音量">
+				<!-- <img class="logo" src="voice-no.png"> -->
+				<img class="logo" src="./images/voice-yes.png">
+			</div>
+			<div class="btn-play-mode">
+				<img class="logo" src="./images/play-cycle.png" title="循环播放">
+				<img class="logo" src="./images/play-order.png" title="顺序播放">
+				<img class="logo" src="./images/play-random.png" title="随机播放">
+				<img class="logo" src="./images/play-single-cycle.png" title="单曲顺序">
+			</div>
+		</div>
+	</div>
+
+</html>
