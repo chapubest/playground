@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>带点击波纹效果的按钮</title>
+    <link rel="stylesheet" href="../_common/normalize.css">
+    <style>
+        .container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #eccbaf;
+        }
+        .button-witch-ripple {
+            position: relative;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            border-radius: 4px;
+            font-family: Tahoma, sans-serif;
+            overflow: hidden;
+            color: #fff;
+            background-color: #6200ee;
+            box-shadow: 0 0 4px rgba(0, 0, 0, .3);
+        }
+        /* 波纹 */
+        span.ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, .7);
+            transform: scale(0);
+            animation: buttonRipple .6s linear;
+        }
+        @keyframes buttonRipple {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="button-witch-ripple">button witch ripple</button>
+    </div>
+    <script src="../_common/jquery-3.5.1.js"></script>
+    <script>
+        $(".button-witch-ripple").on("click", function(e) {
+            const button = $(this);
+            var width = button.outerHeight() + button.outerWidth();
+            var ripple = $("<span></span>");
+            ripple.addClass("ripple");
+            ripple.css({
+                width: width+"px",
+                height: width+"px",
+                left: `${e.offsetX - width / 2}px`,
+                top: `${e.offsetY - width / 2}px`
+            })
+            if (button.find(".ripple").length > 0) {
+                button.find(".ripple").remove();
+            }
+            button.append(ripple)
+        })
+    </script>
+</body>
+</html>
