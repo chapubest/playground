@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="jquery-3.5.1.js"></script>
+  <script src="qrcode.js"></script>
+  <script src="main.js"></script>
+  <link rel="stylesheet" href="baseMain.css">
+</head>
+<body>
+  <header class="header">
+    <div class="more"><img src="./菜单.png" alt="menu"></div>
+    <div class="title">二维码在线工具</div>
+    <div></div>
+  </header>
+  <nav class="main-nav">
+    <span class="active">文本</span>
+    <span>网址</span>
+    <span>图片</span>
+    <span>微信</span>
+  </nav>
+  <section class="input-body">
+    <textarea name="intext" id="input-area" rows="5" placeholder="请输入文字内容"></textarea>
+  </section>
+  <button id="create-qrcode">生成二维码</button>
+  <div id="output"></div>
+</body>
+</html>

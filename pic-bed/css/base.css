@@ -1,0 +1,117 @@
+* {
+  padding: 0;
+  margin: 0;
+  border: none;
+  box-sizing: border-box;
+}
+html,body {
+  height: 100%;
+}
+
+/*
+e7f0d2
+d2ea9b
+abcb89
+83b271
+*/
+/*
+fcdab7
+1e5f74
+133b5c
+1d2d50
+*/
+
+body {
+  background-color: #d2ea9b;
+  transition: all 1s;
+}
+
+body.dark {
+  background-color: #1e5f74;
+}
+
+header {
+  background-color: #83b271;
+  color: #fff;
+  transition: all 1s;
+}
+body.dark header {
+  background-color: #1d2d50;
+}
+
+.ios-btn {
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  outline: none;
+  width: 2.8rem;
+  height: 1.6rem;
+  border-radius: 0.8rem;
+  background-color: #ddd;
+}
+.ios-btn::after {
+  position: absolute;
+  left: 0.1rem;
+  top: 0.1rem;
+  z-index: 2;
+  content: '';
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 0.7rem;
+  background-color: #fff;
+  transition: all 0.5s;
+}
+/*@keyframes btnchange {
+  0% {
+    transform: scale(1,1);
+  }
+  50% {
+    transform: scale(0.5,0.5);
+  }
+  100% {
+    transform: scale(1,1);
+  }
+}*/
+.ios-btn.active {
+  background-color: #3e780e;
+}
+.ios-btn.active::after {
+  left: 1.3rem;
+}
+
+.msg-box.info {
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+}
+.msg-box.warn {
+  background-color: rgba(245, 189, 0, 0.75);
+  color: #fff;
+}
+.msg-box.error {
+  background-color: rgba(191, 0, 0, 0.75);
+  color: #fff;
+}
+
+.img-box {
+  background-color: #fff;
+  border: 1px solid #666;
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
+}
+.img-box:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,.4);
+}
+.img-box p {
+  color: #666;
+}
+
+.upload-bar .file {
+  display: none;
+}
+
+.img-box .delete:hover {
+  background-color: #555;
+}
+.delete:hover img {
+  content: url('../img/delete.png');
+}
+

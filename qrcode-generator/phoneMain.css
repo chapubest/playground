@@ -1,0 +1,110 @@
+.main-nav .active {
+  color: #4caf50;
+  position: relative;
+}
+.active::after {
+  content: '';
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  width: 18px;
+  height: 18px;
+  background: url(./右箭头.png) no-repeat;
+  background-size: 100%;
+}
+
+#create-qrcode {
+  outline: none;
+  display: block;
+  margin: 0 auto;
+  background-color: #4caf50;
+  color: #fff;
+  padding: 0 12px; 
+  line-height: 38px;
+  height: 38px;
+  border-radius: 4px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 45px;
+  line-height: 45px;
+  background-color: #4b505d;
+  color: #eee;
+}
+.header>div {
+  min-width: 20px;
+  margin: 0 15px;
+}
+.more {
+  width: 20px;
+  line-height: 20px;
+  height: 20px;
+}
+.more img {
+  width: 100%;
+}
+.main-nav {
+  position: fixed;
+  z-index: 5;
+  top: 0;
+  left: -100px;
+  width: 100px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 1s;
+}
+nav.show {
+  left: 0;
+}
+.main-nav span {
+  line-height: 40px;
+  height: 40px;
+  text-align: center;
+}
+.input-body {
+  width: 100%;
+  padding: 15px;
+}
+/*输入区域*/
+#input-area {
+  box-sizing: border-box;
+  resize: none;
+  line-height: 1.5rem;
+  outline: none;
+  width: 100%;
+  padding: 10px;
+  height: 7.5rem;
+  border-radius: 4px;
+  
+}
+#input-area:focus {
+  box-shadow: 0 0 4px #bbb;
+}
+
+#output {
+  padding: 15px;
+}
+
+#output img {
+  display: inline-block;
+  width: 150px;
+  margin: 0 auto;
+}
+
+.center-pan {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.msg-box {
+  padding: 10px;
+  max-width: 260px;
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+}

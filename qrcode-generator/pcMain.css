@@ -1,0 +1,18 @@
+.main-nav {
+  line-height: 40px;
+  height: 40px;
+  display: flex;
+}
+.main-nav span {
+  user-select: none;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0 5px;
+  margin: 0 5px;
+}
+.main-nav span:hover {
+  color: #4caf50;
+}
+#output {
+  /*margin:0 auto;*/
+}

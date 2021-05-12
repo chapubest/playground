@@ -1,0 +1,29 @@
+* {
+  padding: 0;
+  margin: 0;
+  border: none;
+  box-sizing: border-box;
+}
+html,body {
+  height: 100%;
+}
+
+body {
+  background-color: #f7f9f7;
+}
+
+.center-pan {
+  position: fixed;
+  z-index: 4;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+.back {
+  background-color: rgba(0,0,0,0.75);
+}
+
+.main-nav {
+  background-color: #edf1ea;
+}

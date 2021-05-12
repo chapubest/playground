@@ -37,7 +37,7 @@
         }
         @keyframes buttonRipple {
             to {
-                transform: scale(2);
+                transform: scale(1);
                 opacity: 0;
             }
         }
@@ -45,6 +45,7 @@
 </head>
 <body>
     <div class="container">
+        <button class="button-witch-ripple">button witch ripple</button>
         <button class="button-witch-ripple">button witch ripple</button>
     </div>
     <script src="../_common/jquery-3.5.1.js"></script>
@@ -55,10 +56,10 @@
             var ripple = $("<span></span>");
             ripple.addClass("ripple");
             ripple.css({
-                width: width+"px",
-                height: width+"px",
-                left: `${e.offsetX - width / 2}px`,
-                top: `${e.offsetY - width / 2}px`
+                width: `${width * 2}px`,
+                height: `${width * 2}px`,
+                left: `${e.offsetX - width}px`,
+                top: `${e.offsetY - width}px`
             })
             if (button.find(".ripple").length > 0) {
                 button.find(".ripple").remove();

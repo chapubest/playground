@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chrome新标签页</title>
+    <link rel="stylesheet" href="../_common/normalize.css">
+    <style>
+        :root {
+            --md-tile-size: 112px;
+            --column-count: 3;
+            --content-width: calc(var(--column-count) * var(--md-tile-size));
+        }
+        @media (min-width: 560px) {
+            :root {
+                --column-count: 4;
+            }
+        }
+        @media (min-width: 672px) {
+            :root {
+                --column-count: 5;
+            }
+        }
+        body {
+            height: 100vh;
+        }
+        .link-box {
+            position: absolute;
+            left: calc(50% - var(--content-width)/2);
+            top: calc(50% - 155px);
+            width: var(--content-width);
+            height: 155px;
+        }
+        ul {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            list-style: none;
+        }
+        ul li {
+            position: absolute;
+            transform-origin: left center;
+            transition: transform 300ms ease-in-out;
+        }
+        ul li a {
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            padding-top: 16px;
+            width: var(--md-tile-size);
+            height: var(--md-tile-size);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 4px;
+            color: inherit;
+        }
+        ul li a>img {
+            margin-bottom: 16px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: rgba(220, 231, 117);
+        }
+        ul li a p {
+            margin: 0;
+            padding: 0 8px;
+            width: 88px;
+            height: 24px;
+            line-height: 24px;
+            overflow-x: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            text-align: center;
+            font-size: 12px;
+            font-weight: normal;
+            font-family: 'Segoe UI', 'Roboto', arial, sans-serif;
+        }
+        ul li a button {
+            position: absolute;
+            right: 0;
+            top: 0;
+            margin: 4px 2px;
+            width: 12px;
+            height: 12px;
+            display: none;
+            border: none;
+            cursor: pointer;
+            background-color: transparent;
+            background-image: url(./dont_show_2x.png);
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+        ul li a:hover {
+            background-color: rgba(242, 242, 242);
+        }
+        ul li a:hover button {
+            display: unset;
+            filter: opacity(.5);
+        }
+        ul li a button:hover {
+            filter: opacity(.8);
+        }
+    </style>
+</head>
+<body>
+    <!-- 历史记录 -->
+    <section class="link-box">
+        <ul></ul>
+    </section>
+    <script>
+        var list = [];
+        var lwidth = 112;
+        var lheight = 128;
+        var count = getComputedStyle(document.documentElement).getPropertyValue("--column-count");
+        for(let i = 0; i<10; i++){
+            list.push({
+                url: "https://developers.weixin.qq.com/ebook?action=get_post_info&docid=0008aeea9a8978ab0086a685851c0a",
+                text: "教程",
+                img: "./weixin.png"
+            })
+        }
+        list.forEach((item, index) => {
+            var ul = document.querySelector(".link-box ul");
+            var li = document.createElement("li");
+            li.innerHTML = `<a href="${item.url}" title="${item.text}">
+                <img src="${item.img}" alt="">
+                <p>${item.text}</p>
+                <button type="button" title="不在本页面上显示"></button>
+            </a>`;
+            var y = Math.floor(index / count) * lheight;
+            var x = index % count * lwidth;
+            li.style = `transform: translate(${x}px,${y}px)`;
+            if (index >= 2 * count) {
+                li.style.display = "none";
+            }
+            li.children[0].lastElementChild.addEventListener("click", function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                li.style.transform += "scale(0)"
+                setTimeout(function() {
+                    ul.removeChild(li);
+                    redraw();
+                }, 300)
+            })
+            ul.appendChild(li);
+        })
+        window.onresize = function(e) {
+            var currentCount = getComputedStyle(document.documentElement).getPropertyValue("--column-count");
+            if (currentCount !== count) {
+                count = currentCount;
+                redraw();
+            }
+        }
+        function redraw() {
+            var lis = document.querySelector(".link-box ul").childNodes;
+            lis.forEach((item, index) => {
+                var y = Math.floor(index / count) * lheight;
+                var x = index % count * lwidth;
+                item.style = `transform: translate(${x}px,${y}px)`;
+                if (index >= 2 * count) {
+                    item.style.display = "none";
+                }
+            })
+        }
+    </script>
+</body>
+</html>

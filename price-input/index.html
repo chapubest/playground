@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>价格输入</title>
+</head>
+<body>
+    <input class="discount-price input-price" type="number" placeholder="请输入折扣价" value="123.45"/>
+    <input class="discount-price input-price" type="number" placeholder="请输入折扣价" value="9.90"/>
+    <input class="discount-price input-price" type="number" placeholder="请输入折扣价" value="1.00"/>
+    <input class="discount-price input-price" type="number" placeholder="请输入折扣价" value="0.00"/>
+    <script src="../_common/jquery-3.5.1.js"></script>
+    <script>
+        $(".input-price").on("focus", function(){
+            if (this.value == '0.00') {
+                this.value = '';
+            } else {
+                this.value = this.value.replace(/\.00/, '').replace(/(\.\d)0/,'$1');
+            }
+        })
+        $(".input-price").on("input", function(){
+            this.value = this.value.replace(/(\.\d*)\./, '$1').replace(/(\d*\.\d{2})\d+/, '$1');
+        })
+        $(".input-price").on("blur", function(){
+            this.value = Number(this.value).toFixed(2);
+        })
+    </script>
+</body>
+</html>

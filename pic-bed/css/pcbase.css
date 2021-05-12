@@ -1,0 +1,173 @@
+.content-box {
+  width: 750px;
+  margin: 0 auto;
+}
+header .content-box {
+  height: 45px;
+  display: flex;
+  justify-content: space-between;
+}
+header .left {
+  display: flex;
+  align-items: center
+}
+header .right {
+  display: flex;
+  align-items: center
+}
+header span {
+  cursor: pointer;
+  padding: 0 10px;
+}
+header span:first-child {
+  padding-left: 0;
+}
+header span:last-child {
+  padding-right: 0;
+}
+header .title {
+  font-size: 1.3rem;
+}
+.day-dark-btn {
+  height: 1.2rem;
+}
+.day-dark-btn img {
+  width: 1.2rem;
+}
+/**/
+section .title {
+  padding: 10px 0;
+}
+section .tip {
+  padding: 10px 0;
+  font-size: 0.8rem;
+}
+.upload-area {
+  width: 100%;
+  border: 1px dashed #666;
+  border-radius: 4px;
+  position: relative;
+  padding: 10px;
+}
+.upload-area.file-enter {
+  border: 2px dashed #555;
+  background-color: rgba(0,0,0,0.1);
+}
+.drag-area {
+  min-height: 300px;
+  width: 100%;
+}
+.placeholder {
+  min-height: 300px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.placeholder p {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+}
+.center-pan {
+  position: fixed;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.center-pan .msg-box {
+  padding: 10px;
+  text-align: center;
+  border-radius: 4px;
+}
+.drag-area {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.img-box {
+  width: 220px;
+  height: 250px;
+  padding: 6px;
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.img-box img {
+  max-width: 160px;
+  max-height: 160px;
+}
+.img-box .fill-content {
+  height: 160px;
+}
+.img-box p {
+  font-size: 0.9rem;
+}
+.img-box .name {
+  padding-top: 6px;
+}
+.img-box .size {
+  padding-top: 2px;
+}
+.img-box .delete {
+  box-sizing: content-box;
+  width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  cursor: pointer;
+  border-radius: 2px;
+  border: 1px solid #555;
+  text-align: center;
+}
+.delete img {
+  width: 1rem;
+}
+
+.upload-bar {
+  box-sizing: content-box;
+  margin: 10px 0;
+  border: 1px solid #666;
+  border-radius: 4px;
+  height: 40px;
+  line-height: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+.upload-bar .msg {
+  flex-grow: 2;
+  border-radius: 4px 0 0 4px;
+  background-color: #fff;
+  padding: 0 10px;
+  outline: none;
+  font-size: 1rem;
+}
+.upload-bar .btns {
+  display: flex;
+}
+.upload-bar .btns span{
+  opacity: 0.8;
+  cursor: pointer;
+  padding: 0 10px;
+  font-size: 1rem;
+  color: #fff;
+}
+.upload-bar .btns span:hover {
+  opacity: 1;
+}
+.upload-bar .clear-btn {
+  background-color: #c82333;
+}
+.upload-bar .upload-btn {
+  background-color: #138496;
+}
+.upload-bar .select-btn {
+  background-color: #218838;
+  border-radius: 0 4px 4px 0;
+}
